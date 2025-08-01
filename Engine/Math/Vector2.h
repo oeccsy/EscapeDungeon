@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core.h"
+#include "FVector2.h"
 #include <Windows.h>
 
 class Engine_API Vector2
@@ -15,6 +16,9 @@ public:
 
 	operator COORD();
 	operator COORD() const;
+
+	operator FVector2();
+	operator FVector2() const;
 
 	const char* ToString();
 

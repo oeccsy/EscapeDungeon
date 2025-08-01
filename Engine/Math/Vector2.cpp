@@ -48,6 +48,24 @@ Vector2::operator COORD() const
     return coord;
 }
 
+Vector2::operator FVector2()
+{
+    FVector2 vec;
+    vec.x = (float)x;
+    vec.y = (float)y;
+
+    return vec;
+}
+
+Vector2::operator FVector2() const
+{
+    FVector2 vec;
+    vec.x = (float)x;
+    vec.y = (float)y;
+
+    return vec;
+}
+
 const char* Vector2::ToString()
 {
     if (value != nullptr)
