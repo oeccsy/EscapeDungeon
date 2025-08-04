@@ -165,9 +165,11 @@
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Noise\PerlinNoise.cpp" />
+    <ClCompile Include="System\DungeonExportSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Noise\PerlinNoise.h" />
+    <ClInclude Include="System\DungeonExportSystem.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

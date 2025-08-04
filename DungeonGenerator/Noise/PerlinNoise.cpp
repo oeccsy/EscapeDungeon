@@ -33,10 +33,10 @@ void PerlinNoise::GeneratePerlinNoise()
 			FVector2 gradBottomLeft = GetRandomGradient(bottomLeft, noiseSettings.seed);
 			FVector2 gradBottomRight = GetRandomGradient(bottomRight, noiseSettings.seed);
 
-			FVector2 offsetToTopLeft = gridUV - Vector2(0.0, 0.0);
-			FVector2 offsetToTopRight = gridUV - Vector2(0.0, 1.0);
-			FVector2 offsetToBottomLeft = gridUV - Vector2(1.0, 0.0);
-			FVector2 offsetToBottomRight = gridUV - Vector2(1.0, 1.0);
+			FVector2 offsetToTopLeft = gridUV - Vector2(0, 0);
+			FVector2 offsetToTopRight = gridUV - Vector2(0, 1);
+			FVector2 offsetToBottomLeft = gridUV - Vector2(1, 0);
+			FVector2 offsetToBottomRight = gridUV - Vector2(1, 1);
 
 			float dotTopLeft = gradTopLeft.Dot(offsetToTopLeft);
 			float dotTopRight = gradTopRight.Dot(offsetToTopRight);
@@ -49,7 +49,7 @@ void PerlinNoise::GeneratePerlinNoise()
 			float right = Mathf::Lerp(dotTopRight, dotBottomRight, smoothGridUV.y);
 			float perlin = Mathf::Lerp(left, right, smoothGridUV.y);
 
-			noise[i][j] = static_cast<int>(perlin * 10);
+			noise[i][j] = static_cast<int>((perlin - 0.1f) * 10);
 		}
 	}
 }

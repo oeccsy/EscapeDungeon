@@ -21,9 +21,15 @@
     <ClCompile Include="Noise\PerlinNoise.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="System\DungeonExportSystem.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Noise\PerlinNoise.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="System\DungeonExportSystem.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

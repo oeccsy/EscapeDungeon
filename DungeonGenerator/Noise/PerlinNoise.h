@@ -23,7 +23,7 @@ public:
 private:
 	FVector2 GetRandomGradient(FVector2 position, float seed);
 
-private:
+public:
 	NoiseSettings noiseSettings;
 	int noise[100][100] = { };
 };
