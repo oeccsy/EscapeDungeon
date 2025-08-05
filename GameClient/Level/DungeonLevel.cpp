@@ -1,4 +1,6 @@
 #include "DungeonLevel.h"
+
+#include "Actor/Player.h"
 #include "Actor/Road.h"
 
 #include <iostream>
@@ -6,6 +8,8 @@
 DungeonLevel::DungeonLevel()
 {
 	ReadDungeonFile("Map_1.txt");
+
+	AddActor(new Player({ 3, 3 }, this));
 }
 
 DungeonLevel::~DungeonLevel() {}
@@ -23,6 +27,11 @@ void DungeonLevel::Tick(float deltaTime)
 void DungeonLevel::Render()
 {
 	super::Render();
+}
+
+bool DungeonLevel::Movable(const Vector2& targetPos)
+{
+	return dungeon[targetPos.y][targetPos.x] == '#';
 }
 
 void DungeonLevel::ReadDungeonFile(const char* fileName)

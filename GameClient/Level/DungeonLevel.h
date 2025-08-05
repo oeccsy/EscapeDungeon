@@ -1,9 +1,9 @@
 #pragma once
 
 #include "Level/Level.h"
-#include "Math/Vector2.h"
+#include "Interface/IMovable.h"
 
-class DungeonLevel : public Level
+class DungeonLevel : public Level, public IMovable
 {
 	RTTI_DECLARATIONS(DungeonLevel, Level)
 
@@ -14,6 +14,8 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float deltaTime) override;
 	virtual void Render() override;
+
+	virtual bool Movable(const Vector2& targetPos);
 
 private:
 	void ReadDungeonFile(const char* fileName);

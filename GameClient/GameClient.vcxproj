@@ -171,6 +171,7 @@ xcopy $(SolutionDir)\Assets $(OutDir)..\Assets\ /y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Actor\Dungeon.cpp" />
     <ClCompile Include="Actor\Player.cpp" />
     <ClCompile Include="Actor\Road.cpp" />
     <ClCompile Include="Game\Game.cpp" />
@@ -178,9 +179,11 @@ xcopy $(SolutionDir)\Assets $(OutDir)..\Assets\ /y</Command>
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Actor\Dungeon.h" />
     <ClInclude Include="Actor\Player.h" />
     <ClInclude Include="Actor\Road.h" />
     <ClInclude Include="Game\Game.h" />
+    <ClInclude Include="Interface\IMovable.h" />
     <ClInclude Include="Level\DungeonLevel.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
