@@ -1,7 +1,9 @@
-#include <iostream>
+#include "Game/Game.h"
 
 int main()
 {
-	std::cout << "test" << '\n';
+	Game game;
+	game.Run();
+
 	return 0;
 }
