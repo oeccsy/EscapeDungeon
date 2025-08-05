@@ -21,20 +21,15 @@ int main()
 	settings.gridSize = { 4, 4 };
 	settings.resolution = { 80, 40 };
 
-	/*std::cout << "던전의 가로 길이를 입력해주세요. : ";
-	std::cin >> settings.resolution.x;
-	std::cout << "던전의 세로 길이를 입력해주세요. : ";
-	std::cin >> settings.resolution.y;*/
-
 	while (repeat--)
 	{
 		settings.seed = Utils::RandomFloat(0.0f, 10000.0f);
 
 		PerlinNoise perlinNoise(settings);
 		perlinNoise.GeneratePerlinNoise();
-		perlinNoise.Print();
 	
 		exportSystem.GenerateDungeon(perlinNoise);
+		exportSystem.Export();
 	}
 
 	return 0;

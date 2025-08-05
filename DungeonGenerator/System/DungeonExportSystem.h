@@ -7,7 +7,16 @@ struct DungeonNode
 {
 	int row;
 	int col;
-	int id;
+
+	int areaID = -1;
+	char value = ' ';
+};
+
+struct DungeonEdge
+{
+	DungeonNode src;
+	DungeonNode dest;
+	int weight = 10000;
 };
 
 class DungeonExportSystem
@@ -27,5 +36,9 @@ private:
 private:
 	int width = 0;
 	int height = 0;
-	char dungeon[100][100] = { };
+
+	DungeonNode dungeon[100][100] = { };
+	DungeonEdge areaAdj[100][100] = { };
+	
+	std::vector<DungeonNode> borderNodes;
 };

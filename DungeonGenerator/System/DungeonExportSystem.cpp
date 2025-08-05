@@ -10,9 +10,8 @@ DungeonExportSystem::~DungeonExportSystem() { }
 
 void DungeonExportSystem::GenerateDungeon(PerlinNoise& perlinNoise)
 {
-	int areaID[100][100];
-	std::vector<DungeonNode> edgeArea;
-	
+	std::cout << "던전 초기화 진행중 ... " << '\n';
+
 	width = perlinNoise.noiseSettings.resolution.x;
 	height = perlinNoise.noiseSettings.resolution.y;
 
@@ -20,170 +19,223 @@ void DungeonExportSystem::GenerateDungeon(PerlinNoise& perlinNoise)
 	{
 		for (int j = 0; j < width; ++j)
 		{
+			dungeon[i][j].row = i;
+			dungeon[i][j].col = j;
+
 			if (perlinNoise.noise[i][j] > 0)
 			{
-				areaID[i][j] = 0;
-				dungeon[i][j] = '#';
+				dungeon[i][j].areaID = 0;
+				dungeon[i][j].value = '#';
 			}
 			else
 			{
-				areaID[i][j] = -1;
-				dungeon[i][j] = ' ';
+				dungeon[i][j].areaID = -1;
+				dungeon[i][j].value = ' ';
 			}
 		}
 	}
 
+	for (int i = 0; i < 100; ++i)
+	{
+		for (int j = 0; j < 100; ++j)
+		{
+			DungeonNode dummy;
 
+			areaAdj[i][j].src = dummy;
+			areaAdj[i][j].dest = dummy;
+			areaAdj[i][j].weight = 10000;
+		}
+	}
+
+	borderNodes.clear();
+
+
+	std::cout << "영역 구분 중 ..." << '\n';
 	int dr[4] = { 0, 0, 1, -1 };
 	int dc[4] = { 1, -1, 0, 0 };
-	int idCount = 0;
+	int areaCount = 0;
 
 	for (int i = 0; i < height; ++i)
 	{
 		for (int j = 0; j < width; ++j)
 		{
-			if (areaID[i][j] != 0) continue;
-			
-			std::queue<DungeonNode> queue;
+			if (dungeon[i][j].areaID != 0) continue;
 
-			areaID[i][j] = ++idCount;
+			++areaCount;
 
-			DungeonNode start;
-			start.row = i;
-			start.col = j;
-			start.id = areaID[i][j];
+			std::queue<DungeonNode*> queue;
 			
+			DungeonNode* start = &dungeon[i][j];
+			start->areaID = areaCount;
 			queue.push(start);
 
 			while (!queue.empty())
 			{
-				DungeonNode curNode = queue.front();
+				DungeonNode* curNode = queue.front();
 				queue.pop();
 
 				bool isEdgeArea = false;
 
 				for (int k = 0; k < 4; k++)
 				{
-					int nextRow = curNode.row + dr[k];
-					int nextCol = curNode.col + dc[k];
+					int nextRow = curNode->row + dr[k];
+					int nextCol = curNode->col + dc[k];
 
 					if (nextRow < 0 || nextRow >= height || nextCol < 0 || nextCol >= width) continue;
+					if (dungeon[nextRow][nextCol].areaID == -1) isEdgeArea = true;
+					if (dungeon[nextRow][nextCol].areaID != 0) continue;
 
-					if (areaID[nextRow][nextCol] == -1) isEdgeArea = true;
-					if (areaID[nextRow][nextCol] != 0) continue;
-
-					areaID[nextRow][nextCol] = areaID[curNode.row][curNode.col];
-
-					DungeonNode nextNode;
-					nextNode.row = nextRow;
-					nextNode.col = nextCol;
-					nextNode.id = areaID[nextRow][nextCol];
+					DungeonNode* nextNode = &dungeon[nextRow][nextCol];
+					nextNode->areaID = curNode->areaID;
 
 					queue.push(nextNode);
 				}
 
-				if (isEdgeArea) edgeArea.push_back(curNode);
+				if (isEdgeArea) borderNodes.push_back(*curNode);
 			}
 		}
 	}
 
-	std::cout << "edgeArea Size : " << edgeArea.size() << '\n';
+	if (areaCount >= 100) return;
 
-	std::vector<int> parentIDs;
-	int unionCount = 0;
 
-	for (int i = 0; i <= idCount; ++i)
+	std::cout << "최단거리 찾는중 ... " << '\n';
+
+	for (auto& node : borderNodes)
 	{
-		parentIDs.push_back(i);
-	}
-	
-	for (auto it = edgeArea.begin(); it != edgeArea.end(); ++it)
-	{ 
+		bool isVisit[100][100] = { false, };
 
-		DungeonNode* prev[100][100] = { nullptr, };
-		std::queue<DungeonNode> queue;
+		std::queue<std::pair<DungeonNode*, int>> queue;
 
-		DungeonNode start = *it;
-		prev[start.row][start.col] = new DungeonNode(start);
-		queue.push(start);
+		DungeonNode* start = &node;
+		isVisit[start->row][start->col] = true;
+		queue.push({ start, 0 });
 
-		DungeonNode end;
-		bool findEnd = false;
-
-		while (!queue.empty() && !findEnd)
+		while (!queue.empty())
 		{
-			DungeonNode curNode = queue.front();
+			DungeonNode* curNode = queue.front().first;
+			int curNodeDist = queue.front().second;
 			queue.pop();
 
 			for (int i = 0; i < 4; i++)
 			{
-				int nextRow = curNode.row + dr[i];
-				int nextCol = curNode.col + dc[i];
+				int nextRow = curNode->row + dr[i];
+				int nextCol = curNode->col + dc[i];
 
 				if (nextRow < 0 || nextRow >= height || nextCol < 0 || nextCol >= width) continue;
-				if (areaID[nextRow][nextCol] == curNode.id) continue;
-				if (prev[nextRow][nextCol] != nullptr) continue;
+				if (isVisit[nextRow][nextCol]) continue;
+				if (dungeon[nextRow][nextCol].areaID == start->areaID) continue;
+
+				isVisit[nextRow][nextCol] = true;
+
+				DungeonNode* nextNode = &dungeon[nextRow][nextCol];
+				int nextNodeDist = curNodeDist + 1;
 				
-				prev[nextRow][nextCol] = new DungeonNode(curNode);
-				
-				DungeonNode nextNode;
-				nextNode.row = nextRow;
-				nextNode.col = nextCol;
-				nextNode.id = curNode.id;
-
-				queue.push(nextNode);
-
-				int nextID = areaID[nextRow][nextCol];
-
-				if (nextID > 0)
+				if (nextNode->areaID > 0 && nextNodeDist < areaAdj[start->areaID][nextNode->areaID].weight)
 				{
-					end = nextNode;
-					end.id = areaID[nextRow][nextCol];
-					findEnd = true;
+					DungeonEdge* uv = &areaAdj[start->areaID][nextNode->areaID];
+					uv->src = *start;
+					uv->dest = *nextNode;
+					uv->weight = nextNodeDist;
+
+					DungeonEdge* vu = &areaAdj[nextNode->areaID][start->areaID];
+					vu->src = *nextNode;
+					vu->dest = *start;
+					vu->weight = nextNodeDist;
+				}
+				else
+				{
+					queue.push({ nextNode, nextNodeDist });
 				}
 			}
 		}
+	}
 
-		if (!findEnd) continue;
-		if (Find(start.id, parentIDs) == Find(end.id, parentIDs)) continue;
 
-		Union(start.id, end.id, parentIDs);
-		++unionCount;
-		
-		DungeonNode* path = &end;
-		
-		while (true)
+	std::cout << "영역 연결중 ..." << '\n';
+	
+	std::priority_queue<std::pair<int, DungeonEdge*>, std::vector<std::pair<int, DungeonEdge*>>, std::greater<std::pair<int, DungeonEdge*>>> pq;
+
+	for (int i = 1; i <= areaCount; i++)
+	{
+		for (int j = i + 1; j <= areaCount; j++)
 		{
-			if (path->row == start.row && path->col == start.col) break;
+			DungeonEdge* edge = &areaAdj[i][j];
+			
+			if (edge->weight == 0) continue;
+			
+			pq.push({ edge->weight, edge });
+		}
+	}
+
+
+	std::vector<int> parentAreaID;
+	int unionCount = 0;
+
+	for (int i = 0; i <= areaCount; ++i)
+	{
+		parentAreaID.push_back(i);
+	}
+
+	while (!pq.empty())
+	{
+		auto edge = pq.top().second;
+		pq.pop();
+
+		int srcAreaID = edge->src.areaID;
+		int destAreaID = edge->dest.areaID;
+
+		if (Find(srcAreaID, parentAreaID) == Find(destAreaID, parentAreaID)) continue;
+
+		DungeonNode* prev[100][100] = { nullptr, };
+
+		std::queue<DungeonNode*> queue;
 		
-			dungeon[path->row][path->col] = '#';
+		DungeonNode* src = &edge->src;
+		prev[src->row][src->col] = src;
+		queue.push(src);
+
+		DungeonNode* dest = nullptr;
+
+		while (!queue.empty() && dest == nullptr)
+		{
+			DungeonNode* curNode = queue.front();
+			queue.pop();
+
+			for (int i = 0; i < 4; i++)
+			{
+				int nextRow = curNode->row + dr[i];
+				int nextCol = curNode->col + dc[i];
+
+				if (nextRow < 0 || nextRow >= height || nextCol < 0 || nextCol >= width) continue;
+				if (prev[nextRow][nextCol] != nullptr) continue;
+				if (dungeon[nextRow][nextCol].areaID == src->areaID) continue;
+
+				prev[nextRow][nextCol] = curNode;
+
+				DungeonNode* nextNode = &dungeon[nextRow][nextCol];
+				queue.push(nextNode);
+
+				if (nextNode->areaID == destAreaID) dest = nextNode;
+			}
+		}
+
+		if (dest == nullptr) continue;
+		DungeonNode* path = dest;
+
+		while (path != src)
+		{
+			dungeon[path->row][path->col].value = '#';
 			path = prev[path->row][path->col];
 		}
 
-		if (unionCount == idCount) break;
+		Union(srcAreaID, destAreaID, parentAreaID);
+		unionCount++;
+
+		if (unionCount == areaCount) break;
 	}
 
-
-	for (int i = 0; i < height; i++)
-	{
-		for (int j = 0; j < width; j++)
-		{
-			if (areaID[i][j] >= 0)
-			{
-				std::cout << areaID[i][j];
-			}
-			else
-			{
-				std::cout << ' ';
-			}
-
-		}
-		std::cout << '\n';
-	}
-
-	std::cout << "Area 수 : " << idCount << '\n';
-
-	Print();
+	std::cout << "==== 던전 생성 완료! ==== " << '\n';
 }
 
 void DungeonExportSystem::Export()
@@ -222,7 +274,11 @@ void DungeonExportSystem::Export()
 
 	for (int i = 0; i < height; ++i)
 	{
-		fwrite(dungeon[i], sizeof(char), width, file);
+		for (int j = 0; j < width; ++j)
+		{
+			fputc(dungeon[i][j].value, file);
+		}
+		
 		fputc('\n', file);
 	}
 
@@ -237,7 +293,27 @@ void DungeonExportSystem::Print()
 	{
 		for (int j = 0; j < width; j++)
 		{
-			std::cout << dungeon[i][j];
+			if (dungeon[i][j].areaID >= 0)
+			{
+				std::cout << dungeon[i][j].areaID;
+			}
+			else
+			{
+				std::cout << ' ';
+			}
+
+		}
+		std::cout << '\n';
+	}
+
+	std::cout << '\n';
+	std::cout << '\n';
+
+	for (int i = 0; i < height; i++)
+	{
+		for (int j = 0; j < width; j++)
+		{
+			std::cout << dungeon[i][j].value;
 		}
 		std::cout << '\n';
 	}
@@ -253,12 +329,7 @@ void DungeonExportSystem::Union(int id1, int id2, std::vector<int>& parents)
 
 int DungeonExportSystem::Find(int id, std::vector<int>& parents)
 {
-	if (parents[id] == id)
-	{
-		return id;
-	}
-	else
-	{
-		return Find(parents[id], parents);
-	}
+	if (parents[id] != id) parents[id] = Find(parents[id], parents);
+	
+	return parents[id];
 }
