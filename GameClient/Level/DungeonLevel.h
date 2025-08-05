@@ -2,6 +2,7 @@
 
 #include "Level/Level.h"
 #include "Interface/IMovable.h"
+#include "Actor/Player.h"
 
 class DungeonLevel : public Level, public IMovable
 {
@@ -22,4 +23,5 @@ private:
 
 private:
 	char dungeon[100][100] = { };
+	Player* player;
 };

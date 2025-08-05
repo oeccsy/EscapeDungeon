@@ -1,7 +1,11 @@
 #include "DungeonLevel.h"
 
+#include "Engine.h"
+
 #include "Actor/Player.h"
 #include "Actor/Road.h"
+
+#include "Utils/Utils.h"
 
 #include <iostream>
 
@@ -9,7 +13,8 @@ DungeonLevel::DungeonLevel()
 {
 	ReadDungeonFile("Map_1.txt");
 
-	AddActor(new Player({ 3, 3 }, this));
+	player = new Player({ 3, 3 }, this);
+	AddActor(player);
 }
 
 DungeonLevel::~DungeonLevel() {}
@@ -27,6 +32,18 @@ void DungeonLevel::Tick(float deltaTime)
 void DungeonLevel::Render()
 {
 	super::Render();
+
+	char buffer[20] = { };
+	
+	for (int i = 0; i < Player::MAX_STAMINA; i++)
+	{
+		buffer[i] = (i < player->GetStamina()) ? 'O' : ' ';
+		buffer[i + 1] = '\0';
+	}
+
+	Utils::SetConsolePosition(Vector2(1, 41));
+	Utils::SetConsoleTextColor(Color::White);
+	std::cout << buffer;
 }
 
 bool DungeonLevel::Movable(const Vector2& targetPos)
