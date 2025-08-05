@@ -21,6 +21,8 @@ int main()
 	settings.gridSize = { 4, 4 };
 	settings.resolution = { 80, 40 };
 
+	srand(static_cast<unsigned int>(time(nullptr)));
+
 	while (repeat--)
 	{
 		settings.seed = Utils::RandomFloat(0.0f, 10000.0f);
