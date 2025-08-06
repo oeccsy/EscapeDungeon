@@ -5,6 +5,9 @@
 #include "Math/Vector2.h"
 #include "Collider/BoxCollider.h"
 
+int Player::escapeCount = 0;
+int Player::deadCount = 0;
+
 Player::Player(const Vector2& position, IMovable* movable) : Actor("P", Color::Red, position), movableInterface(movable)
 {
 	SetSortingOrder(3);
@@ -89,6 +92,18 @@ void Player::Move()
 			--stamina;
 		}
 	}
+}
+
+void Player::Escape()
+{
+	++escapeCount;
+	Destroy();
+}
+
+void Player::Die()
+{
+	++deadCount;
+	Destroy();
 }
 
 int Player::GetStamina()

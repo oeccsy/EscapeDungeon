@@ -15,6 +15,9 @@ public:
 	virtual void Tick(float deltaTime) override;
 
 	void Move();
+	void Escape();
+	void Die();
+
 	int GetStamina();
 
 private:
@@ -22,6 +25,8 @@ private:
 
 public:
 	static const int MAX_STAMINA = 10;
+	static int escapeCount;
+	static int deadCount;
 
 private:
 	int stamina;

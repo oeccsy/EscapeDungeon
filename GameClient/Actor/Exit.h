@@ -8,9 +8,4 @@ class Exit : public Actor
 
 public:
 	Exit(const Vector2& position);
-
-	void Escape(Actor* actor);
-
-public:
-	static int escapeCount;
 };

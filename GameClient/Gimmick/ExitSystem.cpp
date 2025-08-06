@@ -36,7 +36,7 @@ void ExitSystem::EscapePlayer(std::vector<Exit*>& exits, std::vector<Player*>& p
 	{
 		for (auto player : players)
 		{
-			if (exit->GetPosition() == player->GetPosition()) exit->Escape(player);
+			if (exit->GetPosition() == player->GetPosition()) player->Escape();
 		}
 	}
 }

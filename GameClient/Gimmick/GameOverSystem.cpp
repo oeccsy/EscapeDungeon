@@ -1,5 +1,5 @@
 #include "GameOverSystem.h"
-#include "Actor/Exit.h"
+#include "Actor/Player.h"
 #include "Utils/Utils.h"
 
 #include <iostream>
@@ -9,7 +9,7 @@ GameOverSystem::GameOverSystem(int playerCount) : playerCount(playerCount) { }
 
 void GameOverSystem::CheckGameOver()
 {
-	if (playerCount == Exit::escapeCount) GameOver();
+	if (playerCount == Player::escapeCount + Player::deadCount) GameOver();
 }
 
 void GameOverSystem::GameOver()
