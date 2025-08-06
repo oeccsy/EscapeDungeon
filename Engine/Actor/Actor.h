@@ -37,6 +37,7 @@ public:
 
 	BoxCollider* GetBoxCollider();
 	bool Intersects(Actor* other);
+	bool Intersects(Vector2 pos);
 
 protected:
 	Vector2 position;

@@ -15,6 +15,7 @@ public:
 	Vector2 GetMinBound();
 
 	bool Intersects(BoxCollider* other);
+	bool Intersects(Vector2 pos);
 	
 private:
 	Vector2 center;

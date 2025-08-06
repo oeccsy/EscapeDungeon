@@ -111,3 +111,10 @@ bool Actor::Intersects(Actor* other)
 
 	return collider->Intersects(other->GetBoxCollider());
 }
+
+bool Actor::Intersects(Vector2 pos)
+{
+	if (collider == nullptr) return false;
+	
+	return collider->Intersects(pos);
+}

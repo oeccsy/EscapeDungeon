@@ -3,6 +3,7 @@
 #include "Engine.h"
 
 #include "Actor/Player.h"
+#include "Actor/Monster.h"
 #include "Actor/Task.h"
 #include "Actor/Road.h"
 #include "Actor/Exit.h"
@@ -17,7 +18,10 @@ DungeonLevel::DungeonLevel()
 	ReadDungeonFile("Map_1.txt");
 
 	player = new Player({ 3, 3 }, this);
+	monster = new Monster({ 5, 5 }, this);
+
 	AddActor(player);
+	AddActor(monster);
 	AddActor(new Task({5, 5}));
 }
 
@@ -60,9 +64,10 @@ void DungeonLevel::Tick(float deltaTime)
 		}
 	}
 
-	exitSystem.ProgressTask(tasks, players, deltaTime);
-	exitSystem.CheckOpenExit(*this, 1);
-	exitSystem.EscapePlayer(exits, players);
+	interactionSystem.ProgressTask(tasks, players, deltaTime);
+	interactionSystem.CheckOpenExit(*this, 1);
+	interactionSystem.EscapePlayer(exits, players);
+	interactionSystem.KillPlayer(monster, players);
 
 	gameOverSystem.CheckGameOver();
 }
@@ -71,17 +76,29 @@ void DungeonLevel::Render()
 {
 	super::Render();
 
-	char buffer[20] = { };
+	char playerStaminaText[20] = { };
 	
 	for (int i = 0; i < Player::MAX_STAMINA; i++)
 	{
-		buffer[i] = (i < player->GetStamina()) ? 'O' : ' ';
-		buffer[i + 1] = '\0';
+		playerStaminaText[i] = (i < player->GetStamina()) ? 'O' : ' ';
+		playerStaminaText[i + 1] = '\0';
 	}
 
 	Utils::SetConsolePosition(Vector2(100, 1));
 	Utils::SetConsoleTextColor(Color::White);
-	std::cout << buffer;
+	std::cout << playerStaminaText;
+
+	char monsterStaminaText[20] = { };
+
+	for (int i = 0; i < Monster::MAX_STAMINA; i++)
+	{
+		monsterStaminaText[i] = (i < monster->GetStamina()) ? 'X' : ' ';
+		monsterStaminaText[i + 1] = '\0';
+	}
+
+	Utils::SetConsolePosition(Vector2(100, 3));
+	Utils::SetConsoleTextColor(Color::White);
+	std::cout << monsterStaminaText;
 }
 
 bool DungeonLevel::Movable(const Vector2& targetPos)

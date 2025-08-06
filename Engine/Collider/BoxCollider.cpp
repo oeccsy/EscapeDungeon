@@ -35,3 +35,13 @@ bool BoxCollider::Intersects(BoxCollider* other)
     return true;
 }
 
+bool BoxCollider::Intersects(Vector2 pos)
+{
+    Vector2 ownMaxBound = GetMaxBound();
+    Vector2 ownMinBound = GetMinBound();
+
+    if (ownMaxBound.x < pos.x || ownMinBound.x > pos.x) return false;
+    if (ownMaxBound.y < pos.y || ownMinBound.y > pos.y) return false;
+
+    return true;
+}

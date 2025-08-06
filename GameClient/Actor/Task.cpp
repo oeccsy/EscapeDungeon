@@ -26,7 +26,7 @@ void Task::ProgressTask(float deltaTime)
 	char buffer[20] = { };
 	sprintf_s(buffer, sizeof(buffer), "%f", curTaskTime);
 
-	Utils::SetConsolePosition(Vector2(100, 5));
+	Utils::SetConsolePosition(Vector2(100, 7));
 	Utils::SetConsoleTextColor(Color::White);
 	std::cout << buffer;
 }
