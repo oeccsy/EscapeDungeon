@@ -8,6 +8,7 @@
 
 
 const float Task::REQUIRED_TASK_TIME = 5.0f;
+int Task::completedTaskCount = 0;
 
 Task::Task(const Vector2& position) : Actor("T", Color::White, position), curTaskTime(0.0f)
 {
@@ -36,4 +37,6 @@ void Task::TaskDone()
 
 	image = new char[2];
 	strcpy_s(image, 2, "D");
+
+	++completedTaskCount;
 }

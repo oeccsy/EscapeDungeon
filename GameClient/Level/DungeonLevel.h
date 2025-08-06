@@ -4,6 +4,7 @@
 #include "Interface/IMovable.h"
 #include "Actor/Player.h"
 #include "Gimmick/ExitSystem.h"
+#include "Gimmick/GameOverSystem.h"
 
 class DungeonLevel : public Level, public IMovable
 {
@@ -27,4 +28,5 @@ private:
 	Player* player;
 
 	ExitSystem exitSystem;
+	GameOverSystem gameOverSystem;
 };

@@ -5,6 +5,7 @@
 #include "Actor/Player.h"
 #include "Actor/Task.h"
 #include "Actor/Road.h"
+#include "Actor/Exit.h"
 
 #include "Utils/Utils.h"
 
@@ -33,6 +34,7 @@ void DungeonLevel::Tick(float deltaTime)
 
 	std::vector<Task*> tasks;
 	std::vector<Player*> players;
+	std::vector<Exit*> exits;
 
 	for (Actor* const actor : actors)
 	{
@@ -49,9 +51,20 @@ void DungeonLevel::Tick(float deltaTime)
 			players.emplace_back(player);
 			continue;
 		}
+
+		Exit* exit = actor->As<Exit>();
+		if (exit)
+		{
+			exits.emplace_back(exit);
+			continue;
+		}
 	}
 
 	exitSystem.ProgressTask(tasks, players, deltaTime);
+	exitSystem.CheckOpenExit(*this, 1);
+	exitSystem.EscapePlayer(exits, players);
+
+	gameOverSystem.CheckGameOver();
 }
 
 void DungeonLevel::Render()
