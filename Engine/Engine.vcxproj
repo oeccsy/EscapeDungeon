@@ -172,6 +172,7 @@ xcopy $(OutDir)\Engine.dll ..\Lib\Engine\ /y</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Actor\Actor.h" />
+    <ClInclude Include="Collider\BoxCollider.h" />
     <ClInclude Include="Core\Core.h" />
     <ClInclude Include="Core\Delegate.h" />
     <ClInclude Include="Core\Engine.h" />
@@ -186,6 +187,7 @@ xcopy $(OutDir)\Engine.dll ..\Lib\Engine\ /y</Command>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Actor\Actor.cpp" />
+    <ClCompile Include="Collider\BoxCollider.cpp" />
     <ClCompile Include="Core\Delegate.cpp" />
     <ClCompile Include="Core\Engine.cpp" />
     <ClCompile Include="Core\Input.cpp" />

@@ -2,6 +2,7 @@
 #include "Utils/Utils.h"
 #include "Engine.h"
 #include "Level/Level.h"
+#include "Collider/BoxCollider.h"
 
 #include <Windows.h>
 #include <iostream>
@@ -18,6 +19,7 @@ Actor::Actor(const char* image, Color color, const Vector2& position) : color(co
 Actor::~Actor()
 {
 	SafeDeleteArray(image);
+	SafeDelete(collider);
 }
 
 void Actor::BeginPlay()
@@ -54,8 +56,6 @@ void Actor::SetPosition(const Vector2& newPosition)
 	position.x = direction.x >= 0 ? position.x : position.x + width - 1;
 
 	Utils::SetConsolePosition(position);
-	
-	// TODO : 문자열 길이 고려해서 지울 위치 확인해야함.
 	std::cout << ' ';
 
 	position = newPosition;
@@ -86,38 +86,6 @@ Level* Actor::GetOwner()
 	return owner;
 }
 
-bool Actor::TestIntersect(const Actor* const other)
-{
-	// AABB(Axis Aligned Bounding Box).
-	// Note: 현재 액터 구조 상 세로는 크기가 없음(크기가 1).
-	//       따라서 가로의 최소/최대 위치만 더 고려하면 됨.
-
-	// 이 액터의 x 좌표 정보.
-	int xMin = position.x;
-	int xMax = position.x + width - 1;
-
-	// 충돌 비교할 다른 액터의 x 좌표 정보.
-	int otherXMin = other->position.x;
-	int otherXMax = other->position.x + other->width - 1;
-
-	// 안겹치는 조건 확인.
-
-	// 다른 액터의 왼쪽 좌표가 내 오른쪽 좌표보다 더 오른쪽에 있으면 안겹침.
-	if (otherXMin > xMax)
-	{
-		return false;
-	}
-
-	// 다른 액터의 오른쪽 좌표가 내 왼쪽 좌표보다 더 왼쪽에 있으면 안겹침.
-	if (otherXMax < xMin)
-	{
-		return false;
-	}
-
-	// y 좌표가 같은지 최종 확인.
-	return position.y == other->position.y;
-}
-
 void Actor::Destroy()
 {
 	isExpired = true;
@@ -128,4 +96,18 @@ void Actor::Destroy()
 void Actor::QuitGame()
 {
 	Engine::Get().Quit();
+}
+
+BoxCollider* Actor::GetBoxCollider()
+{
+	return collider;
+}
+
+bool Actor::Intersects(Actor* other)
+{
+	if (collider == nullptr) return false;
+	if (other == nullptr) return false;
+	if (other->GetBoxCollider() == nullptr) return false;
+
+	return collider->Intersects(other->GetBoxCollider());
 }

@@ -5,6 +5,7 @@
 #include "Utils/Color.h"
 #include "RTTI.h"
 
+class BoxCollider;
 class Engine_API Actor : public RTTI
 {
 	friend class Level;
@@ -30,11 +31,12 @@ public:
 	void SetOwner(Level* newOwner);
 	Level* GetOwner();
 
-	bool TestIntersect(const Actor* const other);
-
 	void Destroy();
 
 	void QuitGame();
+
+	BoxCollider* GetBoxCollider();
+	bool Intersects(Actor* other);
 
 protected:
 	Vector2 position;
@@ -54,4 +56,6 @@ protected:
 	bool isExpired = false;
 
 	Level* owner = nullptr;
+
+	BoxCollider* collider;
 };

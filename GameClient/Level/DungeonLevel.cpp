@@ -3,11 +3,13 @@
 #include "Engine.h"
 
 #include "Actor/Player.h"
+#include "Actor/Task.h"
 #include "Actor/Road.h"
 
 #include "Utils/Utils.h"
 
 #include <iostream>
+#include <vector>
 
 DungeonLevel::DungeonLevel()
 {
@@ -15,6 +17,7 @@ DungeonLevel::DungeonLevel()
 
 	player = new Player({ 3, 3 }, this);
 	AddActor(player);
+	AddActor(new Task({5, 5}));
 }
 
 DungeonLevel::~DungeonLevel() {}
@@ -27,6 +30,28 @@ void DungeonLevel::BeginPlay()
 void DungeonLevel::Tick(float deltaTime)
 {
 	super::Tick(deltaTime);
+
+	std::vector<Task*> tasks;
+	std::vector<Player*> players;
+
+	for (Actor* const actor : actors)
+	{
+		Task* task = actor->As<Task>();
+		if (task)
+		{
+			tasks.emplace_back(task);
+			continue;
+		}
+
+		Player* player = actor->As<Player>();
+		if (player)
+		{
+			players.emplace_back(player);
+			continue;
+		}
+	}
+
+	exitSystem.ProgressTask(tasks, players, deltaTime);
 }
 
 void DungeonLevel::Render()
@@ -41,7 +66,7 @@ void DungeonLevel::Render()
 		buffer[i + 1] = '\0';
 	}
 
-	Utils::SetConsolePosition(Vector2(1, 41));
+	Utils::SetConsolePosition(Vector2(100, 1));
 	Utils::SetConsoleTextColor(Color::White);
 	std::cout << buffer;
 }

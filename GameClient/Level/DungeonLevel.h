@@ -3,6 +3,7 @@
 #include "Level/Level.h"
 #include "Interface/IMovable.h"
 #include "Actor/Player.h"
+#include "Gimmick/ExitSystem.h"
 
 class DungeonLevel : public Level, public IMovable
 {
@@ -24,4 +25,6 @@ private:
 private:
 	char dungeon[100][100] = { };
 	Player* player;
+
+	ExitSystem exitSystem;
 };

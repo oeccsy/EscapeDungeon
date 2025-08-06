@@ -2,6 +2,9 @@
 #include "Input.h"
 #include "Interface/IMovable.h"
 
+#include "Math/Vector2.h"
+#include "Collider/BoxCollider.h"
+
 Player::Player(const Vector2& position, IMovable* movable) : Actor("P", Color::Red, position), movableInterface(movable)
 {
 	SetSortingOrder(3);
@@ -11,6 +14,8 @@ Player::Player(const Vector2& position, IMovable* movable) : Actor("P", Color::R
 
 	Delegate staminaEvent(this, [](void* instance) { static_cast<Player*>(instance)->AddStamina(); });
 	staminaTimer.Register(staminaEvent);
+
+	collider = new BoxCollider({ 0, 0 }, { 1, 1 }, this);
 }
 
 void Player::BeginPlay()
