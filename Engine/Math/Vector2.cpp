@@ -8,12 +8,7 @@ Vector2 Vector2::Up = Vector2(1, 0);
         
 Vector2::Vector2(int x, int y) : x(x), y(y) { }
 
-Vector2::~Vector2()
-{
-    if (value == nullptr) return;
-    
-    delete[] value;
-}
+Vector2::~Vector2() { }
 
 Vector2 Vector2::operator+(const Vector2& other) const
 {
@@ -64,16 +59,4 @@ Vector2::operator FVector2() const
     vec.y = (float)y;
 
     return vec;
-}
-
-const char* Vector2::ToString()
-{
-    if (value != nullptr)
-    {
-        delete[] value;
-    }
-
-    value = new char[1024];
-    sprintf_s(value, 1024, "(%d, %d)", x, y);
-    return value;
 }
