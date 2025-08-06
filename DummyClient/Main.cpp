@@ -62,7 +62,7 @@ int main()
 
 		std::cout << "Send Data! Len = " << sizeof(sendBuffer) << '\n';
 
-		 char recvBuffer[1000];
+		 char recvBuffer[100];
 		
 		 int recvLen = ::recv(clientSocket, recvBuffer, sizeof(recvBuffer), 0);
 		 
