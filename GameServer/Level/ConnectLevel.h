@@ -18,6 +18,7 @@ public:
 	virtual void Tick(float deltaTime) override;
 	virtual void Render() override;
 
+private:
 	void InitUI();
 
 	void PlayerJoin();

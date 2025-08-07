@@ -22,6 +22,8 @@ public:
 
 	virtual bool Movable(const Vector2& targetPos);
 
+	void InitUI();
+
 private:
 	void ReadDungeonFile(const char* fileName);
 

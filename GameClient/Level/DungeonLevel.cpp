@@ -16,6 +16,7 @@
 DungeonLevel::DungeonLevel()
 {
 	ReadDungeonFile("Map_1.txt");
+	InitUI();
 
 	player = new Player({ 3, 3 }, this);
 	monster = new Monster({ 5, 5 }, this);
@@ -104,6 +105,23 @@ void DungeonLevel::Render()
 bool DungeonLevel::Movable(const Vector2& targetPos)
 {
 	return dungeon[targetPos.y][targetPos.x] == '#';
+}
+
+void DungeonLevel::InitUI()
+{
+	Utils::SetConsoleTextColor(Color::White);
+
+	Utils::SetConsolePosition(Vector2(90, 7));
+	std::cout << "¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á\n";
+
+	for (int i = 1; i <= 30; ++i)
+	{
+		Utils::SetConsolePosition(Vector2(90, 38 - i));
+		std::cout << "¡á                                        ¡á";
+	}
+
+	Utils::SetConsolePosition(Vector2(90, 38));
+	std::cout << "¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á\n";
 }
 
 void DungeonLevel::ReadDungeonFile(const char* fileName)

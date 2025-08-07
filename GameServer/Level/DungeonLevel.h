@@ -23,7 +23,12 @@ public:
 	virtual bool Movable(const Vector2& targetPos);
 
 private:
+	void InitUI();
+
 	void ReadDungeonFile(const char* fileName);
+	
+	void BindClientID();
+	void SpawnActors();
 
 private:
 	char dungeon[100][100] = { };
