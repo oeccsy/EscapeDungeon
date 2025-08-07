@@ -16,7 +16,7 @@ public:
 	
 private:
 	SOCKET clientSocket = INVALID_SOCKET;
-	SOCKADDR_IN serverAddr;
+	SOCKADDR_IN serverAddr = { };
 
 	bool isConnected = false;
 };

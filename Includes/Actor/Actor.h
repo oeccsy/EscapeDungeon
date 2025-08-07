@@ -58,5 +58,5 @@ protected:
 
 	Level* owner = nullptr;
 
-	BoxCollider* collider;
+	BoxCollider* collider = nullptr;
 };
