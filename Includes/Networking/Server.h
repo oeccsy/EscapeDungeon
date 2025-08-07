@@ -1,12 +1,6 @@
 #pragma once
 
-
 #include "Core.h"
-
-#include <WinSock2.h>
-#include <MSWSock.h>
-#include <WS2tcpip.h>
-#pragma comment(lib, "ws2_32.lib")
 
 #include <vector>
 
@@ -24,7 +18,7 @@ public:
 	bool Recv();
 	void Close();
 
-private:
+public:
 	SOCKET listenSocket = INVALID_SOCKET;
 	SOCKADDR_IN serverAddr;
 
