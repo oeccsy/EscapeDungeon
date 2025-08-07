@@ -46,66 +46,90 @@ int main()
 		return 0;
 	}
 
-	std::cout << "==== Accept ====" << '\n';
-	while (true)
-	{
-		std::cout << "==== Accept ====" << '\n';
 
-		SOCKADDR_IN clientAddr;
-		::memset(&clientAddr, 0, sizeof(clientAddr));
-		int addrLen = sizeof(clientAddr);
+    std::cout << "==== Multiplexing ====" << '\n';
 
-		SOCKET clientSocket = ::accept(listenSocket, (SOCKADDR*)&clientAddr, &addrLen);
-		if (clientSocket == INVALID_SOCKET)
-		{
-			int errCode = ::WSAGetLastError();
-			std::cout << "Accept Error : " << errCode << '\n';
-			return 0;
-		}
+    fd_set readSet;
+    fd_set writeSet;
 
-		char ipAddress[16];
-		::inet_ntop(AF_INET, &clientAddr.sin_addr, ipAddress, sizeof(ipAddress));
-		std::cout << "Client Connected! IP = " << ipAddress << '\n';
+    FD_ZERO(&readSet);
+    FD_SET(listenSocket, &readSet);
 
-		std::cout << "==== Send/Receive ====" << '\n';
-		while (true)
-		{
-			std::cout << "==== Send/Receive ====" << '\n';
-			char recvBuffer[1000];
+    while (true)
+    {
+        fd_set readSetCopy = readSet;
+        TIMEVAL timeout;
+        timeout.tv_sec = 5;
+        timeout.tv_usec = 5000;
 
-			int recvLen = ::recv(clientSocket, recvBuffer, sizeof(recvBuffer), 0);
+        int fdNum = select(0, &readSetCopy, 0, 0, &timeout);
 
-			if (recvLen == 0)
-			{
-				std::cout << "Client Disconnected" << '\n';
-				break;
-			}
+        if (fdNum == SOCKET_ERROR)
+        {
+            std::cout << "Multiplexing Error" << '\n';
+            break;
+        }
 
-			if (recvLen < 0)
-			{
-				int errCode = ::WSAGetLastError();
-				std::cout << "Receive Error : " << errCode << '\n';
-				return 0;
-			}
+        if (fdNum == 0) continue;
 
-			std::cout << "Recv Data! Data = " << recvBuffer << '\n';
-			std::cout << "Recv Data! Len = " << recvLen << '\n';
+        for (int i = 0; i < readSet.fd_count; ++i)
+        {
+            if (FD_ISSET(readSet.fd_array[i], &readSetCopy) == false) continue;
 
-			int resultCode = ::send(clientSocket, recvBuffer, recvLen, 0);
-			if (resultCode == SOCKET_ERROR)
-			{
-				int errCode = ::WSAGetLastError();
-				std::cout << "Send Error : " << errCode << '\n';
-				return 0;
-			}
-		}
+            if (readSet.fd_array[i] == listenSocket)
+            {
+                SOCKADDR_IN clientAddr;
+                ::memset(&clientAddr, 0, sizeof(clientAddr));
+                int addrLen = sizeof(clientAddr);
 
-		::closesocket(clientSocket);
-	}
+                SOCKET clientSocket = ::accept(listenSocket, (SOCKADDR*)&clientAddr, &addrLen);
+                if (clientSocket == INVALID_SOCKET)
+                {
+                    int errCode = ::WSAGetLastError();
+                    std::cout << "Accept Error : " << errCode << '\n';
+                    return 0;
+                }
 
-	::closesocket(listenSocket);
-	::WSACleanup();
+                FD_SET(clientSocket, &readSet);
+            }
+            else
+            {
+                char recvBuffer[100];
 
-	std::cin.get();
-	return 0;
+                int recvLen = ::recv(readSet.fd_array[i], recvBuffer, sizeof(recvBuffer), 0);
+
+                if (recvLen == 0)
+                {
+                    FD_CLR(readSet.fd_array[i], &readSet);
+                    closesocket(readSetCopy.fd_array[i]);
+                    std::cout << "Client Disconnected" << '\n';
+                    break;
+                }
+
+                if (recvLen < 0)
+                {
+                    int errCode = ::WSAGetLastError();
+                    std::cout << "Receive Error : " << errCode << '\n';
+                    return 0;
+                }
+
+                std::cout << "Recv Data! Data = " << recvBuffer << '\n';
+                std::cout << "Recv Data! Len = " << recvLen << '\n';
+
+                int resultCode = ::send(readSet.fd_array[i], recvBuffer, recvLen, 0);
+                if (resultCode == SOCKET_ERROR)
+                {
+                    int errCode = ::WSAGetLastError();
+                    std::cout << "Send Error : " << errCode << '\n';
+                    return 0;
+                }
+            }
+        }
+    }
+
+    ::closesocket(listenSocket);
+    ::WSACleanup();
+
+    std::cin.get();
+    return 0;
 }
