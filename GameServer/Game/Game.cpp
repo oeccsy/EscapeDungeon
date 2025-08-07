@@ -7,6 +7,6 @@ Game::~Game() { }
 
 void Game::Run()
 {
-	engine.AddLevel(new ConnectLevel);
+	engine.AddLevel(new ConnectLevel());
 	engine.Run();
 }

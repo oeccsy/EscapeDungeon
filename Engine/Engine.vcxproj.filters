@@ -60,6 +60,9 @@
     <ClInclude Include="Networking\Client.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Networking\Packet.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\Engine.cpp">

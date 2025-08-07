@@ -48,6 +48,7 @@ bool Client::Connect()
 		return false;
 	}
 
+	isConnected = true;
 	return true;
 }
 
@@ -71,7 +72,7 @@ bool Client::Send(char* data, int size)
 	return true;
 }
 
-bool Client::Recv()
+bool Client::Recv(char* buffer, int size)
 {
 	if (clientSocket == INVALID_SOCKET)
 	{
@@ -79,11 +80,27 @@ bool Client::Recv()
 		return false;
 	}
 
-	char recvBuffer[100];
-	int recvLen = ::recv(clientSocket, recvBuffer, sizeof(recvBuffer), 0);
+	fd_set readSetCopy = readSet;
+	TIMEVAL timeout;
+	timeout.tv_sec = 0;
+	timeout.tv_usec = 0;
+
+	int fdNum = select(0, &readSetCopy, 0, 0, &timeout);
+
+	if (fdNum == SOCKET_ERROR)
+	{
+		std::cout << "Recv Error" << '\n';
+		return false;
+	}
+
+	if (FD_ISSET(clientSocket, &readSetCopy) == false) return false;
+
+	int recvLen = ::recv(clientSocket, buffer, size, 0);
 
 	if (recvLen == 0)
 	{
+		FD_CLR(clientSocket, &readSet);
+		closesocket(clientSocket);
 		std::cout << "Server Disconnected" << '\n';
 		return true;
 	}
