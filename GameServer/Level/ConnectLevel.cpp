@@ -4,10 +4,13 @@
 #include "Math/Vector2.h"
 #include "Utils/Utils.h"
 
+#include "Game/Game.h"
+
 #include <iostream>
 
 ConnectLevel::ConnectLevel()
 {
+	Server& server = Server::Get();
 	server.InitSocket();
 	server.Bind();
 	server.Listen();
@@ -31,6 +34,8 @@ void ConnectLevel::Tick(float deltaTime)
 {
 	super::Tick(deltaTime);
 
+	Server& server = Server::Get();
+
 	if (playerCount < MAX_PLAYER_COUNT)
 	{
 		bool isPlayerJoin = server.Accept();
@@ -45,10 +50,13 @@ void ConnectLevel::Tick(float deltaTime)
 		Packet packet = server.packets.front();
 		server.packets.pop();
 
-		// TODO : 패킷 처리
+		switch (packet.data[0])
+		{
+		case 's':
+			Game::Get().LoadDungeonLevel();
+			break;
+		}
 	}
-
-	// TODO : 패킷 전송
 }
 
 void ConnectLevel::Render()
@@ -93,6 +101,8 @@ void ConnectLevel::PlayerJoin()
 	playerCount++;
 	logs.push_back("새로운 플레이어가 접속하였습니다.");
 	
+	Server& server = Server::Get();
+
 	char buffer[100] = { 'n', playerCount };
 	server.SendAll(buffer, 100);
 }

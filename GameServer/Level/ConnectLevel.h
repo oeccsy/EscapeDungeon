@@ -26,7 +26,6 @@ public:
 private:
 	static const int MAX_PLAYER_COUNT = 4;
 	
-	Server server;
 	int playerCount = 0;
 	std::vector<std::string> logs;
 };

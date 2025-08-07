@@ -22,13 +22,10 @@ public:
 	
 	void RecvData();
 
-	void SetPlayerInfo(int playerCount);
-
 	void RequestConnect();
-	void RequestPlayersInfo();
+	void RequestStart();
 
 private:
-	Client client;
 	int playerCount = 0;
 	std::vector<std::string> logs;
 };

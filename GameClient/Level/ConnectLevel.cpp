@@ -3,11 +3,13 @@
 #include "Networking/Packet.h"
 #include "Math/Vector2.h"
 #include "Utils/Utils.h"
+#include "Game/Game.h"
 
 #include <iostream>
 
 ConnectLevel::ConnectLevel()
 {
+	Client& client = Client::Get();
 	client.InitSocket();
 
 	FD_ZERO(&client.readSet);
@@ -31,6 +33,8 @@ void ConnectLevel::Tick(float deltaTime)
 
 	RecvData();
 
+	Client& client = Client::Get();
+
 	while (!client.packets.empty())
 	{
 		Packet packet = client.packets.front();
@@ -42,10 +46,14 @@ void ConnectLevel::Tick(float deltaTime)
 			logs.push_back("새로운 플레이어가 접속하였습니다.");
 			playerCount = packet.data[1];
 			break;
+		case 'd':
+			Game::Get().LoadDungeonLevel();
+			return;
 		}
 	}
 
 	RequestConnect();
+	if (Input::Get().GetKeyDown(VK_RETURN)) RequestStart();
 }
 
 void ConnectLevel::Render()
@@ -85,6 +93,8 @@ void ConnectLevel::InitUI()
 
 void ConnectLevel::RecvData()
 {
+	Client& client = Client::Get();
+
 	while (true)
 	{
 		Packet packet = { };
@@ -96,13 +106,10 @@ void ConnectLevel::RecvData()
 	}
 }
 
-void ConnectLevel::SetPlayerInfo(int playerCount)
-{
-
-}
-
 void ConnectLevel::RequestConnect()
 {
+	Client& client = Client::Get();
+
 	if (client.isConnected) return;
 
 	bool success = client.Connect();
@@ -111,8 +118,12 @@ void ConnectLevel::RequestConnect()
 	logs.push_back("게임 서버에 접속하였습니다.");
 }
 
-void ConnectLevel::RequestPlayersInfo()
+void ConnectLevel::RequestStart()
 {
-	char buffer[100];
-	client.Send(buffer, 100);
+	Client& client = Client::Get();
+
+	if (!client.isConnected) return;
+
+	char buffer[100] = "s";
+	client.Send(buffer, sizeof(buffer));
 }
