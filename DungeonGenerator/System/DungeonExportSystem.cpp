@@ -1,4 +1,7 @@
 #include "DungeonExportSystem.h"
+
+#include "Utils/Utils.h"
+
 #include <iostream>
 #include <vector>
 #include <queue>
@@ -14,6 +17,7 @@ void DungeonExportSystem::GenerateDungeon(PerlinNoise& perlinNoise)
 
 	width = perlinNoise.noiseSettings.resolution.x;
 	height = perlinNoise.noiseSettings.resolution.y;
+	areaCount = 0;
 
 	for (int i = 0; i < height; ++i)
 	{
@@ -53,7 +57,6 @@ void DungeonExportSystem::GenerateDungeon(PerlinNoise& perlinNoise)
 	std::cout << "영역 구분 중 ..." << '\n';
 	int dr[4] = { 0, 0, 1, -1 };
 	int dc[4] = { 1, -1, 0, 0 };
-	int areaCount = 0;
 
 	for (int i = 0; i < height; ++i)
 	{
@@ -236,6 +239,21 @@ void DungeonExportSystem::GenerateDungeon(PerlinNoise& perlinNoise)
 	}
 
 	std::cout << "==== 던전 생성 완료! ==== " << '\n';
+}
+
+void DungeonExportSystem::AddActors(int taskCount, int exitCount)
+{
+	std::vector<int> availableArea;
+	std::vector<Vector2> availablePos;
+
+	for (int i = 1; i <= areaCount; ++i)
+	{
+		availableArea.push_back(i);
+	}
+
+	std::cout << "==== Set Exit Actors ==== " << '\n';
+	
+	int random = Utils::Random(0, availableArea.size());
 }
 
 void DungeonExportSystem::Export()

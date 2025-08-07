@@ -26,6 +26,7 @@ public:
 	~DungeonExportSystem();
 	
 	void GenerateDungeon(PerlinNoise& perlinNoise);
+	void AddActors(int taskCount, int exitCount);
 	void Export();
 	void Print();
 
@@ -36,6 +37,7 @@ private:
 private:
 	int width = 0;
 	int height = 0;
+	int areaCount = 0;
 
 	DungeonNode dungeon[100][100] = { };
 	DungeonEdge areaAdj[100][100] = { };

@@ -29,8 +29,10 @@ int main()
 
 		PerlinNoise perlinNoise(settings);
 		perlinNoise.GeneratePerlinNoise();
+		perlinNoise.Print();
 	
 		exportSystem.GenerateDungeon(perlinNoise);
+		exportSystem.Print();
 		exportSystem.Export();
 	}
 
