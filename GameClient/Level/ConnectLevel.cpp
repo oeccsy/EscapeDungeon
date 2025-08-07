@@ -38,9 +38,9 @@ void ConnectLevel::Tick(float deltaTime)
 
 		switch (packet.data[0])
 		{
-		case 'a' :
-			break;
-		case 'b':
+		case 'n':
+			logs.push_back("새로운 플레이어가 접속하였습니다.");
+			playerCount = packet.data[1];
 			break;
 		}
 	}
@@ -61,6 +61,9 @@ void ConnectLevel::Render()
 		Utils::SetConsoleTextColor(Color::White);
 		std::cout << log;
 	}
+
+	Utils::SetConsolePosition(Vector2(20, 15));
+	std::cout << "플레이어 수 : " << playerCount;
 }
 
 void ConnectLevel::InitUI()

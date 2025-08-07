@@ -93,7 +93,7 @@ void ConnectLevel::PlayerJoin()
 	playerCount++;
 	logs.push_back("새로운 플레이어가 접속하였습니다.");
 	
-	char buffer[100] = "new player";
+	char buffer[100] = { 'n', playerCount };
 	server.SendAll(buffer, 100);
 }
 
