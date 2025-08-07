@@ -16,6 +16,8 @@ public:
 	bool Send(char* data, int size);
 	bool Recv(char* buffer, int size);
 	void Close();
+
+	static Client& Get();
 	
 public:
 	SOCKET clientSocket = INVALID_SOCKET;
@@ -26,4 +28,6 @@ public:
 	std::queue<Packet> packets;
 
 	bool isConnected = false;
+
+	static Client* instance;
 };

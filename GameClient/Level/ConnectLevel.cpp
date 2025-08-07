@@ -68,7 +68,7 @@ void ConnectLevel::InitUI()
 	Utils::SetConsoleTextColor(Color::White);
 	
 	Utils::SetConsolePosition(Vector2(90, 7));
-	std::cout << "¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á\n";
+	std::cout << "¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á\n";
 
 	for (int i = 1; i <= 30; ++i)
 	{
@@ -77,7 +77,7 @@ void ConnectLevel::InitUI()
 	}
 
 	Utils::SetConsolePosition(Vector2(90, 38));
-	std::cout << "¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á\n";
+	std::cout << "¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á\n";
 }
 
 void ConnectLevel::RecvData()

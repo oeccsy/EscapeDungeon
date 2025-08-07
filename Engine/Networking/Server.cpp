@@ -2,7 +2,12 @@
 
 #include <iostream>
 
-Server::Server() {}
+Server* Server::instance = nullptr;
+
+Server::Server()
+{
+	instance = this;
+}
 
 Server::~Server() {}
 
@@ -80,6 +85,21 @@ bool Server::Accept()
 		return false;
 	}
 
+	fd_set readSetCopy = readSet;
+	TIMEVAL timeout;
+	timeout.tv_sec = 0;
+	timeout.tv_usec = 0;
+
+	int fdNum = select(0, &readSetCopy, 0, 0, &timeout);
+
+	if (fdNum == SOCKET_ERROR)
+	{
+		std::cout << "Accept Error" << '\n';
+		return false;
+	}
+
+	if (FD_ISSET(listenSocket, &readSetCopy) == false) return false;
+
 	SOCKADDR_IN clientAddr;
 	::memset(&clientAddr, 0, sizeof(clientAddr));
 	int addrLen = sizeof(clientAddr);
@@ -92,12 +112,35 @@ bool Server::Accept()
 		return false;
 	}
 
+	FD_SET(clientSocket, &readSet);
 	clientSockets.push_back(clientSocket);
+
+	//Packet packet
 
 	return true;
 }
 
-bool Server::Send(char* data, int size)
+bool Server::Send(SOCKET clientSocket, char* data, int size)
+{
+	if (clientSocket == INVALID_SOCKET)
+	{
+		std::cout << "Send Error" << '\n';
+		return false;
+	}
+
+	int result = ::send(clientSocket, data, size, 0);
+
+	if (result == SOCKET_ERROR)
+	{
+		int errCode = ::WSAGetLastError();
+		std::cout << "Send Error : " << errCode << '\n';
+		return false;
+	}
+
+	return false;
+}
+
+bool Server::SendAll(char* data, int size)
 {
 	bool success = true;
 
@@ -124,12 +167,60 @@ bool Server::Send(char* data, int size)
 	return true;
 }
 
-bool Server::Recv()
+void Server::Recv()
 {
-	return true;
+	fd_set readSetCopy = readSet;
+	TIMEVAL timeout;
+	timeout.tv_sec = 0;
+	timeout.tv_usec = 0;
+
+	int fdNum = select(0, &readSetCopy, 0, 0, &timeout);
+
+	if (fdNum == SOCKET_ERROR)
+	{
+		std::cout << "Recv Error" << '\n';
+		return;
+	}
+
+	if (fdNum == 0) return;
+
+	for (int i = 0; i < readSet.fd_count; ++i)
+	{
+		SOCKET curSocket = readSet.fd_array[i];
+
+		if (FD_ISSET(curSocket, &readSetCopy) == false) continue;
+
+		Packet packet = { };
+		packet.src = curSocket;
+		int recvLen = ::recv(curSocket, packet.data, sizeof(packet.data), 0);
+
+		if (recvLen == 0)
+		{
+			// TODO : 일단 패킷에 넣고 추후 disconnect 처리가 좋아보인다.
+			FD_CLR(curSocket, &readSet);
+			closesocket(curSocket);
+			std::cout << "Client Disconnected" << '\n';
+			continue;
+		}
+
+		if (recvLen < 0)
+		{
+			int errCode = ::WSAGetLastError();
+			std::cout << "Receive Error : " << errCode << '\n';
+			continue;
+		}
+
+		packets.push(packet);
+	}
 }
 
 void Server::Close()
 {
+	::closesocket(listenSocket);
+	::WSACleanup();
+}
 
+Server& Server::Get()
+{
+	return *instance;
 }

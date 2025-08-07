@@ -2,7 +2,12 @@
 
 #include <iostream>
 
-Client::Client() { }
+Client* Client::instance = nullptr;
+
+Client::Client()
+{
+	instance = this;
+}
 
 Client::~Client() { }
 
@@ -120,4 +125,9 @@ void Client::Close()
 	if(isConnected) ::shutdown(clientSocket, SD_SEND);
 	if(clientSocket != INVALID_SOCKET) ::closesocket(clientSocket);
 	::WSACleanup();
+}
+
+Client& Client::Get()
+{
+	return *instance;
 }
