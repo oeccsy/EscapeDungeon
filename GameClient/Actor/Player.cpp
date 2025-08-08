@@ -8,7 +8,7 @@
 int Player::escapeCount = 0;
 int Player::deadCount = 0;
 
-Player::Player(const Vector2& position, IMovable* movable) : Actor("P", Color::Red, position), movableInterface(movable)
+Player::Player(const Vector2& position, IMovable* movable) : Actor("P", Color::Green, position), movableInterface(movable)
 {
 	SetSortingOrder(3);
 

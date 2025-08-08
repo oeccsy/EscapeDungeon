@@ -19,7 +19,7 @@ DungeonLevel::DungeonLevel()
 	InitUI();
 
 	player = new Player({ 3, 3 }, this);
-	monster = new Monster({ 5, 5 }, this);
+	monster = new Monster({ 70, 20 }, this);
 
 	AddActor(player);
 	AddActor(monster);

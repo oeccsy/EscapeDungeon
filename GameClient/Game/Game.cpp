@@ -19,7 +19,8 @@ void Game::LoadDungeonLevel()
 
 void Game::Run()
 {
-	engine.AddLevel(new ConnectLevel);
+	//engine.AddLevel(new ConnectLevel());
+	engine.AddLevel(new DungeonLevel());
 	engine.Run();
 }
 
