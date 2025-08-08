@@ -13,7 +13,7 @@ DungeonExportSystem::~DungeonExportSystem() { }
 
 void DungeonExportSystem::GenerateDungeon(PerlinNoise& perlinNoise)
 {
-	std::cout << "´øÀü ÃÊ±âÈ­ ÁøÇàÁß ... " << '\n';
+	std::cout << "ë˜ì „ ì´ˆê¸°í™” ì§„í–‰ì¤‘ ... " << '\n';
 
 	width = perlinNoise.noiseSettings.resolution.x;
 	height = perlinNoise.noiseSettings.resolution.y;
@@ -54,7 +54,7 @@ void DungeonExportSystem::GenerateDungeon(PerlinNoise& perlinNoise)
 	borderNodes.clear();
 
 
-	std::cout << "¿µ¿ª ±¸ºÐ Áß ..." << '\n';
+	std::cout << "ì˜ì—­ êµ¬ë¶„ ì¤‘ ..." << '\n';
 	int dr[4] = { 0, 0, 1, -1 };
 	int dc[4] = { 1, -1, 0, 0 };
 
@@ -102,7 +102,7 @@ void DungeonExportSystem::GenerateDungeon(PerlinNoise& perlinNoise)
 	if (areaCount >= 100) return;
 
 
-	std::cout << "ÃÖ´Ü°Å¸® Ã£´ÂÁß ... " << '\n';
+	std::cout << "ìµœë‹¨ê±°ë¦¬ ì°¾ëŠ”ì¤‘ ... " << '\n';
 
 	for (auto& node : borderNodes)
 	{
@@ -155,7 +155,7 @@ void DungeonExportSystem::GenerateDungeon(PerlinNoise& perlinNoise)
 	}
 
 
-	std::cout << "¿µ¿ª ¿¬°áÁß ..." << '\n';
+	std::cout << "ì˜ì—­ ì—°ê²°ì¤‘ ..." << '\n';
 	
 	std::priority_queue<std::pair<int, DungeonEdge*>, std::vector<std::pair<int, DungeonEdge*>>, std::greater<std::pair<int, DungeonEdge*>>> pq;
 
@@ -238,7 +238,7 @@ void DungeonExportSystem::GenerateDungeon(PerlinNoise& perlinNoise)
 		if (unionCount == areaCount) break;
 	}
 
-	std::cout << "==== ´øÀü »ý¼º ¿Ï·á! ==== " << '\n';
+	std::cout << "==== ë˜ì „ ìƒì„± ì™„ë£Œ! ==== " << '\n';
 }
 
 void DungeonExportSystem::AddActors(int taskCount, int exitCount)
@@ -286,7 +286,7 @@ void DungeonExportSystem::Export()
 
 	if (file == nullptr)
 	{
-		std::cout << "ÆÄÀÏ »ý¼º ½ÇÆÐ" << '\n';
+		std::cout << "íŒŒì¼ ìƒì„± ì‹¤íŒ¨" << '\n';
 		return;
 	}
 
@@ -302,7 +302,7 @@ void DungeonExportSystem::Export()
 
 	fclose(file);
 
-	std::cout << "ÆÄÀÏ »ý¼º ¼º°ø : " << fullPath << '\n';
+	std::cout << "íŒŒì¼ ìƒì„± ì„±ê³µ : " << fullPath << '\n';
 }
 
 void DungeonExportSystem::Print()

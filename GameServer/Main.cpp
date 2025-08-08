@@ -4,7 +4,7 @@
 
 int main()
 {
-	std::cout << "==== ¼­¹ö ½ÃÀÛ ====" << '\n';
+	std::cout << "==== ì„œë²„ ì‹œì‘ ====" << '\n';
 
 	Game game;
 	game.Run();

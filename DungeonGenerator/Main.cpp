@@ -13,7 +13,7 @@
 int main()
 {
 	int repeat;
-	std::cout << "»ý¼ºÇÒ ´øÀüÀÇ ¼ö¸¦ ÀÔ·ÂÇØÁÖ¼¼¿ä. : ";
+	std::cout << "ìƒì„±í•  ë˜ì „ì˜ ìˆ˜ë¥¼ ìž…ë ¥í•´ì£¼ì„¸ìš”. : ";
 	std::cin >> repeat;
 
 	DungeonExportSystem exportSystem;

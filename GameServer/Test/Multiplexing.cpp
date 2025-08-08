@@ -7,13 +7,13 @@
 
 void Multiplexing()
 {
-    std::cout << "==== ¼­¹ö ½ÃÀÛ ====" << '\n';
+    std::cout << "==== ì„œë²„ ì‹œìž‘ ====" << '\n';
 
-    std::cout << "==== ¶óÀÌºê·¯¸® ÃÊ±âÈ­ ====" << '\n';
+    std::cout << "==== ë¼ì´ë¸ŒëŸ¬ë¦¬ ì´ˆê¸°í™” ====" << '\n';
     WSAData wsaData;
     if (::WSAStartup(MAKEWORD(2, 2), &wsaData)) return;
 
-    std::cout << "==== ¼­¹ö ¼ÒÄÏ »ý¼º ====" << '\n';
+    std::cout << "==== ì„œë²„ ì†Œì¼“ ìƒì„± ====" << '\n';
     SOCKET listenSocket = ::socket(AF_INET, SOCK_STREAM, 0);
     if (listenSocket == INVALID_SOCKET)
     {
@@ -22,7 +22,7 @@ void Multiplexing()
         return;
     }
 
-    std::cout << "==== ÁÖ¼Ò ÁöÁ¤ ====" << '\n';
+    std::cout << "==== ì£¼ì†Œ ì§€ì • ====" << '\n';
     SOCKADDR_IN serverAddr;
     ::memset(&serverAddr, 0, sizeof(serverAddr));
     serverAddr.sin_family = AF_INET;

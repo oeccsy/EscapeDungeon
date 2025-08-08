@@ -1,4 +1,4 @@
-#include <iostream>
+ï»¿#include <iostream>
 
 #include <WinSock2.h>
 #include <MSWSock.h>
@@ -7,13 +7,13 @@
 
 int main()
 {
-	std::cout << "==== Å¬¶ó ½ÃÀÛ ====" << '\n';
+	std::cout << "==== í´ë¼ ì‹œìž‘ ====" << '\n';
 
-	std::cout << "==== ¶óÀÌºê·¯¸® ÃÊ±âÈ­ ====" << '\n';
+	std::cout << "==== ë¼ì´ë¸ŒëŸ¬ë¦¬ ì´ˆê¸°í™” ====" << '\n';
 	WSAData wsaData;
 	if (::WSAStartup(MAKEWORD(2, 2), &wsaData)) return 0;
 
-	std::cout << "==== Å¬¶ó ¼ÒÄÏ »ý¼º ====" << '\n';
+	std::cout << "==== í´ë¼ ì†Œì¼“ ìƒì„± ====" << '\n';
 	SOCKET clientSocket = ::socket(AF_INET, SOCK_STREAM, 0);
 	if (clientSocket == INVALID_SOCKET)
 	{
@@ -22,7 +22,7 @@ int main()
 		return 0;
 	}
 
-	std::cout << "==== ÁÖ¼Ò ÁöÁ¤ ====" << '\n';
+	std::cout << "==== ì£¼ì†Œ ì§€ì • ====" << '\n';
 
 	SOCKADDR_IN serverAddr;
 	::memset(&serverAddr, 0, sizeof(serverAddr));

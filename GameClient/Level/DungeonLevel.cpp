@@ -1,4 +1,4 @@
-#include "DungeonLevel.h"
+ï»¿#include "DungeonLevel.h"
 
 #include "Engine.h"
 
@@ -112,16 +112,16 @@ void DungeonLevel::InitUI()
 	Utils::SetConsoleTextColor(Color::White);
 
 	Utils::SetConsolePosition(Vector2(90, 7));
-	std::cout << "¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á\n";
+	std::cout << "â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– \n";
 
 	for (int i = 1; i <= 30; ++i)
 	{
 		Utils::SetConsolePosition(Vector2(90, 38 - i));
-		std::cout << "¡á                                        ¡á";
+		std::cout << "â–                                         â– ";
 	}
 
 	Utils::SetConsolePosition(Vector2(90, 38));
-	std::cout << "¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á\n";
+	std::cout << "â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– \n";
 }
 
 void DungeonLevel::ReadDungeonFile(const char* fileName)
@@ -136,7 +136,7 @@ void DungeonLevel::ReadDungeonFile(const char* fileName)
 
 	if (file == nullptr)
 	{
-		std::cout << "´øÀü ÆÄÀÏ ÀÐ±â ½ÇÆÐ" << '\n';
+		std::cout << "ë˜ì „ íŒŒì¼ ì½ê¸° ì‹¤íŒ¨" << '\n';
 		__debugbreak();
 		return;
 	}
