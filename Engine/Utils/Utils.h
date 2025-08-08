@@ -1,8 +1,12 @@
 #pragma once
 
-#include <Windows.h>
 #include "Math/Vector2.h"
 #include "Utils/Color.h"
+
+#include <vector>
+#include <random>
+#include <algorithm>
+#include <Windows.h>
 
 namespace Utils
 {
@@ -52,5 +56,19 @@ namespace Utils
 	{
 		float random = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
 		return random * (max - min) + min;
+	}
+
+	template<typename T>
+	inline void ShuffleVector(std::vector<T>& list)
+	{
+		static std::random_device rd;
+		static std::mt19937 gen(rd());
+
+		for (int i = list.size() - 1; i > 0; --i)
+		{
+			std::uniform_int_distribution<> dis(0, i);
+			int randomIndex = dis(gen);
+			std::swap(list[i], list[randomIndex]);
+		}
 	}
 }
