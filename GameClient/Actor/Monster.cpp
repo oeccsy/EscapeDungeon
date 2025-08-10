@@ -40,6 +40,7 @@ void Monster::Tick(float deltaTime)
 
 void Monster::Move()
 {
+	if (isOwner == false) return;
 	if (stamina <= 0) return;
 
 
@@ -104,6 +105,11 @@ void Monster::Kill(Actor* actor)
 int Monster::GetStamina()
 {
 	return stamina;
+}
+
+void Monster::SetOwner(bool isOwner)
+{
+	this->isOwner = isOwner;
 }
 
 void Monster::AddStamina()

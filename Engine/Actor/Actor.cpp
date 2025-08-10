@@ -118,3 +118,13 @@ bool Actor::Intersects(Vector2 pos)
 	
 	return collider->Intersects(pos);
 }
+
+void Actor::SetActorID(int id)
+{
+	actorID = id;
+}
+
+int Actor::GetActorID()
+{
+	return actorID;
+}

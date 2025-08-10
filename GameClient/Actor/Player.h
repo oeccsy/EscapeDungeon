@@ -20,6 +20,8 @@ public:
 
 	int GetStamina();
 
+	void SetOwner(bool isOwner);
+
 private:
 	void AddStamina();
 
@@ -33,4 +35,6 @@ private:
 	Timer staminaTimer;
 
 	IMovable* movableInterface = nullptr;
+
+	bool isOwner = false;
 };

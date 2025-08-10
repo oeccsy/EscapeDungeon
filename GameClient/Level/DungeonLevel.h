@@ -5,6 +5,10 @@
 #include "Gimmick/InteractionSystem.h"
 #include "Gimmick/GameOverSystem.h"
 
+#include <unordered_map>
+#include <vector>
+#include <string>
+
 class Player;
 class Monster;
 
@@ -24,6 +28,9 @@ public:
 
 	void InitUI();
 
+	void BindActorID();
+	void SetID(int id);
+
 private:
 	void ReadDungeonFile(const char* fileName);
 
@@ -34,4 +41,9 @@ private:
 
 	InteractionSystem interactionSystem;
 	GameOverSystem gameOverSystem;
+
+	std::unordered_map<int, Actor*> idToActor;
+	int ownID = -1;
+
+	std::vector<std::string> logs;
 };

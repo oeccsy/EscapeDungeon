@@ -42,8 +42,8 @@ void Player::Tick(float deltaTime)
 
 void Player::Move()
 {
+	if (isOwner == false) return;
 	if (stamina <= 0) return;
-	
 
 	if (Input::Get().GetKeyDown(VK_RIGHT))
 	{
@@ -109,6 +109,11 @@ void Player::Die()
 int Player::GetStamina()
 {
 	return stamina;
+}
+
+void Player::SetOwner(bool isOwner)
+{
+	this->isOwner = isOwner;
 }
 
 void Player::AddStamina()

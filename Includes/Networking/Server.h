@@ -33,7 +33,8 @@ public:
 	fd_set readSet;
 	fd_set writeSet;
 
-	std::queue<Packet> packets;
+	std::queue<Packet> readQueue;
+	std::queue<Packet> writeQueue;
 
 	static Server* instance;
 };

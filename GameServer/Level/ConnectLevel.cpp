@@ -1,5 +1,6 @@
 #include "ConnectLevel.h"
 
+#include "Networking/Server.h"
 #include "Networking/Packet.h"
 #include "Math/Vector2.h"
 #include "Utils/Utils.h"
@@ -45,15 +46,16 @@ void ConnectLevel::Tick(float deltaTime)
 
 	server.Recv();
 
-	while (!server.packets.empty())
+	while (!server.readQueue.empty())
 	{
-		Packet packet = server.packets.front();
-		server.packets.pop();
+		Packet packet = server.readQueue.front();
+		server.readQueue.pop();
 
 		switch (packet.data[0])
 		{
 		case 's':
 			Game::Get().LoadDungeonLevel();
+			return;
 			break;
 		}
 	}

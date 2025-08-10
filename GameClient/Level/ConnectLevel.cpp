@@ -35,10 +35,10 @@ void ConnectLevel::Tick(float deltaTime)
 
 	Client& client = Client::Get();
 
-	while (!client.packets.empty())
+	while (!client.readQueue.empty())
 	{
-		Packet packet = client.packets.front();
-		client.packets.pop();
+		Packet packet = client.readQueue.front();
+		client.readQueue.pop();
 
 		switch (packet.data[0])
 		{
@@ -102,7 +102,7 @@ void ConnectLevel::RecvData()
 		bool success = client.Recv(packet.data, 100);
 		if (success == false) break;
 		
-		client.packets.push(packet);
+		client.readQueue.push(packet);
 	}
 }
 

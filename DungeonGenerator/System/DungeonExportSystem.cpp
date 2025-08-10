@@ -328,7 +328,7 @@ void DungeonExportSystem::AddActors(int taskCount, int exitCount)
 
 		Utils::ShuffleVector<int>(availableArea);
 		auto it = availableArea.begin();
-		int playerCount = 4;
+		int playerCount = 1;
 
 		for (int i = 0; i < playerCount; ++i)
 		{

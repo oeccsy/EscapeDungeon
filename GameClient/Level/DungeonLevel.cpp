@@ -2,6 +2,9 @@
 
 #include "Engine.h"
 
+#include "Networking//Client.h"
+#include "Networking/Packet.h"
+
 #include "Actor/Player.h"
 #include "Actor/Monster.h"
 #include "Actor/Task.h"
@@ -16,6 +19,7 @@
 DungeonLevel::DungeonLevel()
 {
 	ReadDungeonFile("Map_2.txt");
+	BindActorID();
 	InitUI();
 }
 
@@ -29,6 +33,40 @@ void DungeonLevel::BeginPlay()
 void DungeonLevel::Tick(float deltaTime)
 {
 	super::Tick(deltaTime);
+	
+	Client& client = Client::Get();
+
+	while (true)
+	{
+		Packet packet = { };
+
+		bool success = client.Recv(packet.data, 100);
+		if (success == false) break;
+
+		client.readQueue.push(packet);
+	}
+
+	while (!client.readQueue.empty())
+	{
+		Packet packet = client.readQueue.front();
+		client.readQueue.pop();
+
+		Actor* actor = nullptr;
+
+		switch (packet.data[0])
+		{
+		case 'i':
+			ownID = packet.data[1];
+			logs.push_back("ID를 부여받았습니다.");
+
+			actor = idToActor[ownID];
+			if (actor->As<Player>()) actor->As<Player>()->SetOwner(true);
+			if (actor->As<Monster>()) actor->As<Monster>()->SetOwner(true);
+			break;
+		case 'd':
+			break;
+		}
+	}
 
 	std::vector<Task*> tasks;
 	std::vector<Player*> players;
@@ -93,6 +131,16 @@ void DungeonLevel::Render()
 	Utils::SetConsolePosition(Vector2(100, 3));
 	Utils::SetConsoleTextColor(Color::White);
 	std::cout << monsterStaminaText;
+
+	for (int i = 1; i <= 20; ++i)
+	{
+		if (logs.size() < i) break;
+
+		std::string log = logs[logs.size() - i];
+		Utils::SetConsolePosition(Vector2(92, 38 - i));
+		Utils::SetConsoleTextColor(Color::White);
+		std::cout << log;
+	}
 }
 
 bool DungeonLevel::Movable(const Vector2& targetPos)
@@ -181,4 +229,37 @@ void DungeonLevel::ReadDungeonFile(const char* fileName)
 	}
 
 	fclose(file);
+}
+
+void DungeonLevel::BindActorID()
+{
+	int id = 1;
+
+	for (Actor* const actor : addRequestedActors)
+	{
+		Player* player = actor->As<Player>();
+		if (player)
+		{
+			actor->SetActorID(id);
+			idToActor.insert({ id, actor });
+
+			++id;
+			continue;
+		}
+
+		Monster* monster = actor->As<Monster>();
+		if (monster)
+		{
+			actor->SetActorID(id);
+			idToActor.insert({ id, actor });
+
+			++id;
+			continue;
+		}
+	}
+}
+
+void DungeonLevel::SetID(int id)
+{
+	ownID = id;
 }

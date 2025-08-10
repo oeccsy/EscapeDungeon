@@ -115,7 +115,11 @@ bool Server::Accept()
 	FD_SET(clientSocket, &readSet);
 	clientSockets.push_back(clientSocket);
 
-	//Packet packet
+	/*Packet packet = { };
+	packet.src = clientSocket;
+	packet.data[0] = 'n';
+
+	readQueue.push(packet);*/
 
 	return true;
 }
@@ -137,7 +141,7 @@ bool Server::Send(SOCKET clientSocket, char* data, int size)
 		return false;
 	}
 
-	return false;
+	return true;
 }
 
 bool Server::SendAll(char* data, int size)
@@ -164,7 +168,7 @@ bool Server::SendAll(char* data, int size)
 		}
 	}
 
-	return true;
+	return success;
 }
 
 void Server::Recv()
@@ -184,7 +188,7 @@ void Server::Recv()
 
 	if (fdNum == 0) return;
 
-	for (int i = 0; i < readSet.fd_count; ++i)
+	for (int i = 0; i < (int)readSet.fd_count; ++i)
 	{
 		SOCKET curSocket = readSet.fd_array[i];
 
@@ -196,7 +200,7 @@ void Server::Recv()
 
 		if (recvLen == 0)
 		{
-			// TODO : ÀÏ´Ü ÆÐÅ¶¿¡ ³Ö°í ÃßÈÄ disconnect Ã³¸®°¡ ÁÁ¾Æº¸ÀÎ´Ù.
+			// TODO : ï¿½Ï´ï¿½ ï¿½ï¿½Å¶ï¿½ï¿½ ï¿½Ö°ï¿½ ï¿½ï¿½ï¿½ï¿½ disconnect Ã³ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Æºï¿½ï¿½Î´ï¿½.
 			FD_CLR(curSocket, &readSet);
 			closesocket(curSocket);
 			std::cout << "Client Disconnected" << '\n';
@@ -210,7 +214,7 @@ void Server::Recv()
 			continue;
 		}
 
-		packets.push(packet);
+		readQueue.push(packet);
 	}
 }
 

@@ -25,7 +25,8 @@ public:
 
 	fd_set readSet;
 
-	std::queue<Packet> packets;
+	std::queue<Packet> readQueue;
+	std::queue<Packet> writeQueue;
 
 	bool isConnected = false;
 

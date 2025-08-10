@@ -39,6 +39,9 @@ public:
 	bool Intersects(Actor* other);
 	bool Intersects(Vector2 pos);
 
+	void SetActorID(int id);
+	int GetActorID();
+
 protected:
 	Vector2 position;
 	
@@ -59,4 +62,6 @@ protected:
 	Level* owner = nullptr;
 
 	BoxCollider* collider = nullptr;
+
+	int actorID = -1;
 };

@@ -1,9 +1,15 @@
 #pragma once
 
+#include "Core.h"
+
 #include "Level/Level.h"
 #include "Interface/IMovable.h"
 #include "Gimmick/InteractionSystem.h"
 #include "Gimmick/GameOverSystem.h"
+
+#include <unordered_map>
+#include <vector>
+#include <string>
 
 class Player;
 class Monster;
@@ -26,14 +32,18 @@ private:
 
 	void ReadDungeonFile(const char* fileName);
 	
-	void BindClientID();
-	void SpawnActors();
+	void BindActorID();
 
 private:
 	char dungeon[100][100] = { };
 	Player* player;
 	Monster* monster;
 
+	std::unordered_map<SOCKET, Actor*> clientToActor;
+	std::unordered_map<int, Actor*> idToActor;
+
 	InteractionSystem interactionSystem;
 	GameOverSystem gameOverSystem;
+
+	std::vector<std::string> logs;
 };

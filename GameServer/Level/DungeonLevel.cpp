@@ -2,6 +2,10 @@
 
 #include "Engine.h"
 
+#include "Networking/Server.h"
+#include "Networking/Packet.h"
+
+#include "Actor/Actor.h"
 #include "Actor/Player.h"
 #include "Actor/Monster.h"
 #include "Actor/Task.h"
@@ -16,8 +20,8 @@
 DungeonLevel::DungeonLevel()
 {
 	ReadDungeonFile("Map_2.txt");
+	BindActorID();
 	InitUI();
-
 }
 
 DungeonLevel::~DungeonLevel() {}
@@ -26,6 +30,39 @@ DungeonLevel::~DungeonLevel() {}
 void DungeonLevel::Tick(float deltaTime)
 {
 	super::Tick(deltaTime);
+
+	Server& server = Server::Get();
+
+	server.Recv();
+
+	while (!server.readQueue.empty())
+	{
+		Packet packet = server.readQueue.front();
+		server.readQueue.pop();
+
+		SOCKET client = packet.src;
+		Actor* actor = clientToActor[client];
+
+		switch (packet.data[0])
+		{
+		case 'u':
+			if (actor->As<Player>()) actor->As<Player>()->Move({ 0, -1 });
+			if (actor->As<Monster>()) actor->As<Monster>()->Move({ 0, -1 });
+			break;
+		case 'd':
+			if (actor->As<Player>()) actor->As<Player>()->Move({ 0, 1 });
+			if (actor->As<Monster>()) actor->As<Monster>()->Move({ 0, 1 });
+			break;
+		case 'r':
+			if (actor->As<Player>()) actor->As<Player>()->Move({ 1, 0 });
+			if (actor->As<Monster>()) actor->As<Monster>()->Move({ 1, 0 });
+			break;
+		case 'l':
+			if (actor->As<Player>()) actor->As<Player>()->Move({ -1, 0 });
+			if (actor->As<Monster>()) actor->As<Monster>()->Move({ -1, 0 });
+			break;
+		}
+	}
 
 	std::vector<Task*> tasks;
 	std::vector<Player*> players;
@@ -61,6 +98,21 @@ void DungeonLevel::Tick(float deltaTime)
 	interactionSystem.KillPlayer(monster, players);
 
 	gameOverSystem.CheckGameOver();
+
+	while (!server.writeQueue.empty())
+	{
+		Packet packet = server.writeQueue.front();
+		server.writeQueue.pop();
+
+		if (packet.dest == INVALID_SOCKET)
+		{
+			server.SendAll(packet.data, sizeof(packet.data));
+		}
+		else
+		{
+			server.Send(packet.dest, packet.data, sizeof(packet.data));
+		}
+	}
 }
 
 void DungeonLevel::Render()
@@ -175,4 +227,51 @@ void DungeonLevel::ReadDungeonFile(const char* fileName)
 	}
 
 	fclose(file);
+}
+
+void DungeonLevel::BindActorID()
+{
+	int id = 1;
+	auto it = Server::Get().clientSockets.begin();
+
+	for (Actor* const actor : addRequestedActors)
+	{
+		Player* player = actor->As<Player>();
+		if (player)
+		{
+			actor->SetActorID(id);
+			idToActor.insert({ id, actor });
+			clientToActor.insert({ *it, actor });
+
+			Packet packet;
+			packet.dest = *it;
+			packet.data[0] = 'i';
+			packet.data[1] = id;
+
+			Server::Get().writeQueue.push(packet);
+
+			++id;
+			++it;
+			continue;
+		}
+
+		Monster* monster = actor->As<Monster>();
+		if (monster)
+		{
+			actor->SetActorID(id);
+			idToActor.insert({ id, actor });
+			clientToActor.insert({ *it, actor });
+
+			Packet packet;
+			packet.dest = *it;
+			packet.data[0] = 'i';
+			packet.data[1] = id;
+
+			Server::Get().writeQueue.push(packet);
+
+			++id;
+			++it;
+			continue;
+		}
+	}
 }
