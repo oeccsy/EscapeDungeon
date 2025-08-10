@@ -1,4 +1,4 @@
-﻿#include "DungeonLevel.h"
+#include "DungeonLevel.h"
 
 #include "Engine.h"
 
@@ -15,15 +15,8 @@
 
 DungeonLevel::DungeonLevel()
 {
-	ReadDungeonFile("Map_1.txt");
+	ReadDungeonFile("Map_2.txt");
 	InitUI();
-
-	player = new Player({ 3, 3 }, this);
-	monster = new Monster({ 70, 20 }, this);
-
-	AddActor(player);
-	AddActor(monster);
-	AddActor(new Task({5, 5}));
 }
 
 DungeonLevel::~DungeonLevel() {}
@@ -104,7 +97,10 @@ void DungeonLevel::Render()
 
 bool DungeonLevel::Movable(const Vector2& targetPos)
 {
-	return dungeon[targetPos.y][targetPos.x] == '#';
+	char targetPosActor = dungeon[targetPos.y][targetPos.x];
+	if (targetPosActor == '#' || targetPosActor == 'T' || targetPosActor == 'E') return true;
+
+	return false;
 }
 
 void DungeonLevel::InitUI()
@@ -162,6 +158,22 @@ void DungeonLevel::ReadDungeonFile(const char* fileName)
 			{
 			case '#':
 				AddActor(new Road({ j, i }));
+				break;
+			case 'P':
+				AddActor(new Road({ j, i }));
+				AddActor(player = new Player({ j, i }, this));
+				break;
+			case 'M':
+				AddActor(new Road({ j, i }));
+				AddActor(monster = new Monster({ j, i }, this));
+				break;
+			case 'T':
+				AddActor(new Road({ j, i }));
+				AddActor(new Task({ j, i }));
+				break;
+			case 'E':
+				AddActor(new Road({ j, i }));
+				AddActor(new Exit({ j, i }));
 				break;
 			}
 		}

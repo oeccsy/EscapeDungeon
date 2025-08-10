@@ -19,77 +19,25 @@ Monster::Monster(const Vector2& position, IMovable* movable) : Actor("M", Color:
 	collider = new BoxCollider({ 0, 0 }, { 1, 1 }, this);
 }
 
-void Monster::BeginPlay()
-{
-	super::BeginPlay();
-}
-
 void Monster::Tick(float deltaTime)
 {
 	super::Tick(deltaTime);
 
-	if (Input::Get().GetKeyDown(VK_ESCAPE))
-	{
-		QuitGame();
-		return;
-	}
-
-	Move();
 	staminaTimer.Tick(deltaTime);
 }
 
-void Monster::Move()
+void Monster::Move(Vector2 dir)
 {
 	if (stamina <= 0) return;
+	if (dir.x * dir.x + dir.y * dir.y > 1) return;
 
+	Vector2 targetPos = GetPosition() + dir;
+	bool movable = movableInterface->Movable(targetPos);
 
-	if (Input::Get().GetKeyDown(VK_RIGHT))
-	{
-		Vector2 targetPos = GetPosition() + Vector2(1, 0);
-		bool movable = movableInterface->Movable(targetPos);
+	if (movable == false) return;
 
-		if (movable)
-		{
-			SetPosition(targetPos);
-			--stamina;
-		}
-	}
-
-	if (Input::Get().GetKeyDown(VK_LEFT))
-	{
-		Vector2 targetPos = GetPosition() + Vector2(-1, 0);
-		bool movable = movableInterface->Movable(targetPos);
-
-		if (movable)
-		{
-			SetPosition(targetPos);
-			--stamina;
-		}
-	}
-
-	if (Input::Get().GetKeyDown(VK_UP))
-	{
-		Vector2 targetPos = GetPosition() + Vector2(0, -1);
-		bool movable = movableInterface->Movable(targetPos);
-
-		if (movable)
-		{
-			SetPosition(targetPos);
-			--stamina;
-		}
-	}
-
-	if (Input::Get().GetKeyDown(VK_DOWN))
-	{
-		Vector2 targetPos = GetPosition() + Vector2(0, 1);
-		bool movable = movableInterface->Movable(targetPos);
-
-		if (movable)
-		{
-			SetPosition(targetPos);
-			--stamina;
-		}
-	}
+	SetPosition(targetPos);
+	--stamina;
 }
 
 void Monster::Kill(Actor* actor)

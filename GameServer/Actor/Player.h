@@ -2,6 +2,7 @@
 
 #include "Actor/Actor.h"
 #include "Utils/Timer.h"
+#include "Math/Vector2.h"
 
 class IMovable;
 class Player : public Actor
@@ -11,10 +12,9 @@ class Player : public Actor
 public:
 	Player(const Vector2& position, IMovable* movable);
 
-	virtual void BeginPlay() override;
 	virtual void Tick(float deltaTime) override;
 
-	void Move();
+	void Move(Vector2 dir);
 	void Escape();
 	void Die();
 

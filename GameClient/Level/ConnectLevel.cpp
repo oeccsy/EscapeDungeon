@@ -1,4 +1,4 @@
-﻿#include "ConnectLevel.h"
+#include "ConnectLevel.h"
 
 #include "Networking/Packet.h"
 #include "Math/Vector2.h"
