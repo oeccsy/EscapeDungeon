@@ -238,8 +238,6 @@ void DungeonExportSystem::GenerateDungeon(PerlinNoise& perlinNoise)
 		if (unionCount == areaCount) break;
 	}
 
-	AddActors(10, 2);
-
 	std::cout << "==== 던전 생성 완료! ==== " << '\n';
 }
 
