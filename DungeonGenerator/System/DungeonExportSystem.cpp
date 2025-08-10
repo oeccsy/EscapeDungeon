@@ -238,22 +238,141 @@ void DungeonExportSystem::GenerateDungeon(PerlinNoise& perlinNoise)
 		if (unionCount == areaCount) break;
 	}
 
+	AddActors(10, 2);
+
 	std::cout << "==== 던전 생성 완료! ==== " << '\n';
 }
 
 void DungeonExportSystem::AddActors(int taskCount, int exitCount)
 {
+	std::vector<std::vector<Vector2>> availablePos;
 	std::vector<int> availableArea;
-	std::vector<Vector2> availablePos;
+
+	std::cout << "액터 위치 목록 초기화..." << '\n';
+	availablePos.resize(areaCount + 1);
+
+	for (int i = 0; i < height; ++i)
+	{
+		for (int j = 0; j < width; ++j)
+		{
+			int areaID = dungeon[i][j].areaID;
+			if (areaID > 0) availablePos[areaID].push_back({ i, j });
+		}
+	}
 
 	for (int i = 1; i <= areaCount; ++i)
 	{
 		availableArea.push_back(i);
+		Utils::ShuffleVector<Vector2>(availablePos[i]);
 	}
 
-	std::cout << "==== Set Exit Actors ==== " << '\n';
+
+	{
+		std::cout << "Exit 위치 설정중..." << '\n';
+
+		Utils::ShuffleVector<int>(availableArea);
+		auto it = availableArea.begin();
+
+		for (int i = 0; i < exitCount; ++i)
+		{
+			int targetArea = *it;
+
+			Vector2 pos = availablePos[targetArea].back();
+			availablePos[targetArea].pop_back();
+
+			dungeon[pos.x][pos.y].value = 'E';
+
+			if (availablePos[targetArea].empty())
+			{
+				it = availableArea.erase(it);
+			}
+			else
+			{
+				it++;
+			}
+
+			if (it == availableArea.end()) it = availableArea.begin();
+		}
+	}
+
+
+	{
+		std::cout << "Task 위치 설정중..." << '\n';
+
+		Utils::ShuffleVector<int>(availableArea);
+		auto it = availableArea.begin();
+
+		for (int i = 0; i < taskCount; ++i)
+		{
+			int targetArea = *it;
+
+			Vector2 pos = availablePos[targetArea].back();
+			availablePos[targetArea].pop_back();
+
+			dungeon[pos.x][pos.y].value = 'T';
+
+			if (availablePos[targetArea].empty())
+			{
+				it = availableArea.erase(it);
+			}
+			else
+			{
+				it++;
+			}
+
+			if (it == availableArea.end()) it = availableArea.begin();
+		}
+	}
 	
-	int random = Utils::Random(0, availableArea.size());
+
+	{
+		std::cout << "Player 위치 설정중..." << '\n';
+
+		Utils::ShuffleVector<int>(availableArea);
+		auto it = availableArea.begin();
+		int playerCount = 4;
+
+		for (int i = 0; i < playerCount; ++i)
+		{
+			int targetArea = *it;
+
+			Vector2 pos = availablePos[targetArea].back();
+			availablePos[targetArea].pop_back();
+
+			dungeon[pos.x][pos.y].value = 'P';
+
+			if (availablePos[targetArea].empty())
+			{
+				it = availableArea.erase(it);
+			}
+			else
+			{
+				it++;
+			}
+
+			if (it == availableArea.end()) it = availableArea.begin();
+		}
+
+		std::cout << "Monster 위치 설정중..." << '\n';
+
+		int targetArea = *it;
+
+		Vector2 pos = availablePos[targetArea].back();
+		availablePos[targetArea].pop_back();
+
+		dungeon[pos.x][pos.y].value = 'M';
+
+		if (availablePos[targetArea].empty())
+		{
+			it = availableArea.erase(it);
+		}
+		else
+		{
+			it++;
+		}
+
+		if (it == availableArea.end()) it = availableArea.begin();
+	}
 }
 
 void DungeonExportSystem::Export()
