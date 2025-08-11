@@ -9,7 +9,10 @@ Server::Server()
 	instance = this;
 }
 
-Server::~Server() {}
+Server::~Server()
+{
+	Close();
+}
 
 bool Server::InitSocket()
 {
@@ -114,12 +117,6 @@ bool Server::Accept()
 
 	FD_SET(clientSocket, &readSet);
 	clientSockets.push_back(clientSocket);
-
-	/*Packet packet = { };
-	packet.src = clientSocket;
-	packet.data[0] = 'n';
-
-	readQueue.push(packet);*/
 
 	return true;
 }

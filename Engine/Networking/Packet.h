@@ -4,7 +4,7 @@
 
 struct Engine_API Packet
 {
-	SOCKET src;
-	SOCKET dest;
+	SOCKET src = INVALID_SOCKET;
+	SOCKET dest = INVALID_SOCKET;
 	char data[100];
 };

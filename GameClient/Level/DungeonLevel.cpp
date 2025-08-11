@@ -40,7 +40,7 @@ void DungeonLevel::Tick(float deltaTime)
 	{
 		Packet packet = { };
 
-		bool success = client.Recv(packet.data, 100);
+		bool success = client.Recv(packet.data, sizeof(packet.data));
 		if (success == false) break;
 
 		client.readQueue.push(packet);
@@ -52,18 +52,52 @@ void DungeonLevel::Tick(float deltaTime)
 		client.readQueue.pop();
 
 		Actor* actor = nullptr;
+		int actorID = -1;
+		int posX = -1;
+		int posY = -1;
+
+		Player* player = nullptr;
 
 		switch (packet.data[0])
 		{
 		case 'i':
 			ownID = packet.data[1];
-			logs.push_back("ID를 부여받았습니다.");
+			logs.push_back("ID를 부여받았습니다. : " + std::to_string(ownID));
 
 			actor = idToActor[ownID];
 			if (actor->As<Player>()) actor->As<Player>()->SetOwner(true);
 			if (actor->As<Monster>()) actor->As<Monster>()->SetOwner(true);
 			break;
-		case 'd':
+		case 'p':
+			actorID = packet.data[1];
+			posX = packet.data[2];
+			posY = packet.data[3];
+			logs.push_back("이동 데이터 도착 : " + std::to_string(actorID));
+
+			if (idToActor.find(actorID) == idToActor.end()) break;
+
+			actor = idToActor.find(actorID)->second;
+			actor->SetPosition({ posX, posY });
+			break;
+		case 'k':
+			actorID = packet.data[1];
+
+			if (idToActor.find(actorID) == idToActor.end()) break;
+
+			player = idToActor.find(actorID)->second->As<Player>();
+			player->Die();
+
+			logs.push_back(actorID + " 플레이어가 몬스터의 밥도둑이 되었다.");
+			break;
+		case 'e':
+			int actorID = packet.data[1];
+
+			if (idToActor.find(actorID) == idToActor.end()) break;
+
+			player = idToActor.find(actorID)->second->As<Player>();
+			player->Escape();
+
+			logs.push_back(actorID + " 플레이어가 탈출에 성공했다!");
 			break;
 		}
 	}

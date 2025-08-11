@@ -108,7 +108,7 @@ void ConnectLevel::PlayerJoin()
 	Server& server = Server::Get();
 
 	char buffer[100] = { 'n', playerCount };
-	server.SendAll(buffer, 100);
+	server.SendAll(buffer, sizeof(buffer));
 }
 
 void ConnectLevel::PlayerLeave()

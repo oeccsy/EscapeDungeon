@@ -1,4 +1,4 @@
-#include "Client.h"
+﻿#include "Client.h"
 
 #include <iostream>
 
@@ -9,7 +9,10 @@ Client::Client()
 	instance = this;
 }
 
-Client::~Client() { }
+Client::~Client()
+{
+	Close();
+}
 
 bool Client::InitSocket()
 {
@@ -113,6 +116,7 @@ bool Client::Recv(char* buffer, int size)
 	if (recvLen < 0)
 	{
 		int errCode = ::WSAGetLastError();
+		std::cout << '\n';
 		std::cout << "Recv ErrorCode : " << errCode << '\n';
 		return false;
 	}

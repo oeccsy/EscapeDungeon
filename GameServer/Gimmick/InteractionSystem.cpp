@@ -1,9 +1,12 @@
-#include "InteractionSystem.h"
+﻿#include "InteractionSystem.h"
 
 #include "Actor/Task.h"
 #include "Actor/Player.h"
 #include "Actor/Exit.h"
 #include "Actor/Monster.h"
+
+#include "Networking/Packet.h"
+#include "Networking/Server.h"
 
 #include <vector>
 
@@ -36,7 +39,16 @@ void InteractionSystem::EscapePlayer(std::vector<Exit*>& exits, std::vector<Play
 	{
 		for (auto player : players)
 		{
-			if (exit->GetPosition() == player->GetPosition()) player->Escape();
+			if (exit->GetPosition() == player->GetPosition())
+			{
+				player->Escape();
+
+				Packet packet = { };
+				packet.data[0] = 'e';
+				packet.data[1] = player->GetActorID();
+
+				Server::Get().writeQueue.push(packet);
+			}
 		}
 	}
 }
@@ -47,6 +59,15 @@ void InteractionSystem::KillPlayer(Monster* monster, std::vector<Player*>& playe
 	
 	for (auto player : players)
 	{
-		if (monster->Intersects(player->GetPosition())) monster->Kill(player);
+		if (monster->Intersects(player->GetPosition()))
+		{
+			monster->Kill(player);
+
+			Packet packet = { };
+			packet.data[0] = 'k';
+			packet.data[1] = player->GetActorID();
+
+			Server::Get().writeQueue.push(packet);
+		}
 	}
 }

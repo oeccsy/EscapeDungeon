@@ -1,10 +1,12 @@
-#include "Monster.h"
+﻿#include "Monster.h"
 #include "Input.h"
 #include "Interface/IMovable.h"
 
 #include "Math/Vector2.h"
 #include "Collider/BoxCollider.h"
 #include "Actor/Player.h"
+#include "Networking/Client.h"
+#include "Networking/Packet.h"
 
 Monster::Monster(const Vector2& position, IMovable* movable) : Actor("M", Color::Red, position), movableInterface(movable)
 {
@@ -43,53 +45,71 @@ void Monster::Move()
 	if (isOwner == false) return;
 	if (stamina <= 0) return;
 
+	Client& client = Client::Get();
+
 
 	if (Input::Get().GetKeyDown(VK_RIGHT))
 	{
-		Vector2 targetPos = GetPosition() + Vector2(1, 0);
-		bool movable = movableInterface->Movable(targetPos);
+		Packet packet = { };
+		packet.data[0] = 'r';
 
-		if (movable)
-		{
-			SetPosition(targetPos);
-			--stamina;
-		}
+		client.writeQueue.push(packet);
+		//Vector2 targetPos = GetPosition() + Vector2(1, 0);
+		//bool movable = movableInterface->Movable(targetPos);
+
+		//if (movable)
+		//{
+		//	SetPosition(targetPos);
+		//	--stamina;
+		//}
 	}
 
 	if (Input::Get().GetKeyDown(VK_LEFT))
 	{
-		Vector2 targetPos = GetPosition() + Vector2(-1, 0);
-		bool movable = movableInterface->Movable(targetPos);
+		Packet packet = { };
+		packet.data[0] = 'l';
 
-		if (movable)
-		{
-			SetPosition(targetPos);
-			--stamina;
-		}
+		client.writeQueue.push(packet);
+		//Vector2 targetPos = GetPosition() + Vector2(-1, 0);
+		//bool movable = movableInterface->Movable(targetPos);
+
+		//if (movable)
+		//{
+		//	SetPosition(targetPos);
+		//	--stamina;
+		//}
 	}
 
 	if (Input::Get().GetKeyDown(VK_UP))
 	{
-		Vector2 targetPos = GetPosition() + Vector2(0, -1);
-		bool movable = movableInterface->Movable(targetPos);
+		Packet packet = { };
+		packet.data[0] = 'u';
 
-		if (movable)
-		{
-			SetPosition(targetPos);
-			--stamina;
-		}
+		client.writeQueue.push(packet);
+		//Vector2 targetPos = GetPosition() + Vector2(0, -1);
+		//bool movable = movableInterface->Movable(targetPos);
+
+		//if (movable)
+		//{
+		//	SetPosition(targetPos);
+		//	--stamina;
+		//}
 	}
 
 	if (Input::Get().GetKeyDown(VK_DOWN))
 	{
-		Vector2 targetPos = GetPosition() + Vector2(0, 1);
-		bool movable = movableInterface->Movable(targetPos);
+		Packet packet = { };
+		packet.data[0] = 'd';
 
-		if (movable)
-		{
-			SetPosition(targetPos);
-			--stamina;
-		}
+		client.writeQueue.push(packet);
+		//Vector2 targetPos = GetPosition() + Vector2(0, 1);
+		//bool movable = movableInterface->Movable(targetPos);
+
+		//if (movable)
+		//{
+		//	SetPosition(targetPos);
+		//	--stamina;
+		//}
 	}
 }
 

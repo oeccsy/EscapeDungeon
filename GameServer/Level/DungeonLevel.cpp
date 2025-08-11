@@ -22,6 +22,8 @@ DungeonLevel::DungeonLevel()
 	ReadDungeonFile("Map_2.txt");
 	BindActorID();
 	InitUI();
+
+	logs.push_back("==== 던전 시작 ====");
 }
 
 DungeonLevel::~DungeonLevel() {}
@@ -40,8 +42,12 @@ void DungeonLevel::Tick(float deltaTime)
 		Packet packet = server.readQueue.front();
 		server.readQueue.pop();
 
+		logs.push_back("패킷 도착 : " + packet.data[0]);
+
 		SOCKET client = packet.src;
 		Actor* actor = clientToActor[client];
+
+		Packet sendPacket = { };
 
 		switch (packet.data[0])
 		{
@@ -99,6 +105,23 @@ void DungeonLevel::Tick(float deltaTime)
 
 	gameOverSystem.CheckGameOver();
 
+	for (auto actor : actors)
+	{
+		if (actor->GetActorID() > 0)
+		{
+			Vector2 pos = actor->GetPosition();
+			
+			Packet packet = { };
+			packet.data[0] = 'p';
+			packet.data[1] = actor->GetActorID();
+			packet.data[2] = pos.x;
+			packet.data[3] = pos.y;
+
+			server.writeQueue.push(packet);
+		}
+	}
+
+	
 	while (!server.writeQueue.empty())
 	{
 		Packet packet = server.writeQueue.front();
@@ -142,6 +165,18 @@ void DungeonLevel::Render()
 	Utils::SetConsolePosition(Vector2(100, 3));
 	Utils::SetConsoleTextColor(Color::White);
 	std::cout << monsterStaminaText;
+
+	Utils::SetConsoleTextColor(Color::White);
+
+	for (int i = 1; i <= 20; ++i)
+	{
+		if (logs.size() < i) break;
+
+		std::string log = logs[logs.size() - i];
+		Utils::SetConsolePosition(Vector2(92, 38 - i));
+
+		std::cout << log;
+	}
 }
 
 bool DungeonLevel::Movable(const Vector2& targetPos)
@@ -243,7 +278,7 @@ void DungeonLevel::BindActorID()
 			idToActor.insert({ id, actor });
 			clientToActor.insert({ *it, actor });
 
-			Packet packet;
+			Packet packet = { };
 			packet.dest = *it;
 			packet.data[0] = 'i';
 			packet.data[1] = id;
@@ -262,7 +297,7 @@ void DungeonLevel::BindActorID()
 			idToActor.insert({ id, actor });
 			clientToActor.insert({ *it, actor });
 
-			Packet packet;
+			Packet packet = { };
 			packet.dest = *it;
 			packet.data[0] = 'i';
 			packet.data[1] = id;

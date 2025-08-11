@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Core.h"
 #include "FVector2.h"

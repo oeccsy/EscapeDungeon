@@ -1,4 +1,4 @@
-#include "Game.h"
+﻿#include "Game.h"
 #include "Level/ConnectLevel.h"
 #include "Level/DungeonLevel.h"
 
@@ -16,7 +16,7 @@ void Game::LoadDungeonLevel()
 	system("cls");
 	engine.AddLevel(new DungeonLevel());
 
-	char buffer[100] = { 'd' };
+	char buffer[100] = { 'd', '\0'};
 	server.SendAll(buffer, 100);
 }
 
