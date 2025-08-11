@@ -18,6 +18,8 @@ ConnectLevel::ConnectLevel()
 
 	FD_ZERO(&server.readSet);
 	FD_SET(server.listenSocket, &server.readSet);
+
+	logs.push_back("==== 서버 시작 ====");
 }
 
 ConnectLevel::~ConnectLevel()
