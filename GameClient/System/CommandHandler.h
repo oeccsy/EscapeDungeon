@@ -3,7 +3,7 @@
 #include "Level/Level.h"
 #include "Networking/Command.h"
 
-enum class CommandType : char
+enum class CommandType :int
 {
 	Connect = 1,
 	Disconnect = 2,

@@ -2,6 +2,7 @@
 
 #include "Level/Level.h"
 #include "System/UISystem.h"
+#include "System/CommandHandler.h"
 
 #include <vector>
 #include <string>
@@ -27,4 +28,5 @@ private:
 	int playerCount = 0;
 
 	UISystem uiSystem;
+	CommandHandler commandHandler;
 };

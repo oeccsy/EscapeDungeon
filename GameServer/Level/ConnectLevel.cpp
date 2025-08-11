@@ -21,6 +21,7 @@ ConnectLevel::ConnectLevel()
 	Logs::Get().AddLog({ "==== 서버 시작 ====" });
 
 	uiSystem.InitLogArea();
+	commandHandler = CommandHandler(*this);
 }
 
 ConnectLevel::~ConnectLevel() { }
@@ -31,26 +32,30 @@ void ConnectLevel::Tick(float deltaTime)
 
 	Server& server = Server::Get();
 
-	if (playerCount < MAX_PLAYER_COUNT)
-	{
-		bool isPlayerJoin = server.Accept();
-
-		if (isPlayerJoin) PlayerJoin();
-	}
-
+	if (playerCount < MAX_PLAYER_COUNT) server.Accept();
+	
 	server.Recv();
 
 	while (!server.readQueue.empty())
 	{
-		Command packet = server.readQueue.front();
+		Command command = server.readQueue.front();
 		server.readQueue.pop();
 
-		switch (packet.data[0])
+		commandHandler.Execute(command);
+	}
+
+	while (!server.writeQueue.empty())
+	{
+		Command command = server.writeQueue.front();
+		server.writeQueue.pop();
+
+		if (command.dest == INVALID_SOCKET)
 		{
-		case 's':
-			Game::Get().LoadDungeonLevel();
-			return;
-			break;
+			server.SendAll(command.data, sizeof(command.data));
+		}
+		else
+		{
+			server.Send(command.dest, command.data, sizeof(command.data));
 		}
 	}
 }
@@ -62,15 +67,4 @@ void ConnectLevel::Render()
 	Utils::SetConsoleTextColor(Color::White);
 	Utils::SetConsolePosition(Vector2(20, 15));
 	std::cout << "플레이어 수 : " << playerCount;
-}
-
-void ConnectLevel::PlayerJoin()
-{
-	playerCount++;
-	Logs::Get().AddLog({ "새로운 플레이어가 접속했습니다." });
-	
-	Server& server = Server::Get();
-
-	char buffer[100] = { 'n', playerCount };
-	server.SendAll(buffer, sizeof(buffer));
 }

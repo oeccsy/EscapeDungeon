@@ -17,6 +17,7 @@ ConnectLevel::ConnectLevel()
 	FD_SET(client.clientSocket, &client.readSet);
 
 	uiSystem.InitLogArea();
+	commandHandler = CommandHandler(*this);
 }
 
 ConnectLevel::~ConnectLevel() { }

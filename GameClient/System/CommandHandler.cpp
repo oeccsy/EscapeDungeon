@@ -1,9 +1,6 @@
 #include "CommandHandler.h"
 #include "Level/ConnectLevel.h"
 #include "Level/DungeonLevel.h"
-#include "Utils/Logs.h"
-
-#include "Networking/Server.h"
 
 CommandHandler::CommandHandler(Level& level)
 {
@@ -48,22 +45,11 @@ void CommandHandler::Connect(Command command)
 	ConnectLevel* connectLevel = level->As<ConnectLevel>();
 	if (!connectLevel) return;
 
-	connectLevel->playerCount++;
-	Logs::Get().AddLog({ "새로운 플레이어가 접속했습니다." });
-
-	Server& server = Server::Get();
-
-	Command command;
-	command.dest = INVALID_SOCKET;
-	command.data[0] = CommandType::NewPlayer;
-	command.data[1] = connectLevel->playerCount;
-
-	server.writeQueue.push(command);
+	connectLevel->PlayerJoin();
 }
 
 void CommandHandler::Disconnect(Command command)
 {
-	Logs::Get().AddLog({ "어떤 플레이어의 접속이 끊겼습니다." });
 }
 
 void CommandHandler::Ready(Command command)
