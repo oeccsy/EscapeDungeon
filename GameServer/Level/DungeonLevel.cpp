@@ -1,4 +1,4 @@
-#include "DungeonLevel.h"
+﻿#include "DungeonLevel.h"
 
 #include "Engine.h"
 
@@ -159,7 +159,7 @@ void DungeonLevel::InitUI()
 	for (int i = 1; i <= 30; ++i)
 	{
 		Utils::SetConsolePosition(Vector2(90, 38 - i));
-		std::cout << "■                                        ■";
+		std::cout << "■                                        ■" << '\n';
 	}
 
 	Utils::SetConsolePosition(Vector2(90, 38));

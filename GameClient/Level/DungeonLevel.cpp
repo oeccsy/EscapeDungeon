@@ -57,7 +57,7 @@ void DungeonLevel::Tick(float deltaTime)
 		{
 		case 'i':
 			ownID = packet.data[1];
-			logs.push_back("IDë¥¼ ë¶€ì—¬ë°›ì•˜ìŠµë‹ˆë‹¤.");
+			logs.push_back("ID¸¦ ºÎ¿©¹Þ¾Ò½À´Ï´Ù.");
 
 			actor = idToActor[ownID];
 			if (actor->As<Player>()) actor->As<Player>()->SetOwner(true);
@@ -156,16 +156,16 @@ void DungeonLevel::InitUI()
 	Utils::SetConsoleTextColor(Color::White);
 
 	Utils::SetConsolePosition(Vector2(90, 7));
-	std::cout << "â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– \n";
+	std::cout << "¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á\n";
 
 	for (int i = 1; i <= 30; ++i)
 	{
 		Utils::SetConsolePosition(Vector2(90, 38 - i));
-		std::cout << "â–                                         â– ";
+		std::cout << "¡á                                        ¡á";
 	}
 
 	Utils::SetConsolePosition(Vector2(90, 38));
-	std::cout << "â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– \n";
+	std::cout << "¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á\n";
 }
 
 void DungeonLevel::ReadDungeonFile(const char* fileName)
@@ -180,7 +180,7 @@ void DungeonLevel::ReadDungeonFile(const char* fileName)
 
 	if (file == nullptr)
 	{
-		std::cout << "ë˜ì „ íŒŒì¼ ì½ê¸° ì‹¤íŒ¨" << '\n';
+		std::cout << "´øÀü ÆÄÀÏ ÀÐ±â ½ÇÆÐ" << '\n';
 		__debugbreak();
 		return;
 	}

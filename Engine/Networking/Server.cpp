@@ -200,7 +200,6 @@ void Server::Recv()
 
 		if (recvLen == 0)
 		{
-			// TODO : �ϴ� ��Ŷ�� �ְ� ���� disconnect ó���� ���ƺ��δ�.
 			FD_CLR(curSocket, &readSet);
 			closesocket(curSocket);
 			std::cout << "Client Disconnected" << '\n';

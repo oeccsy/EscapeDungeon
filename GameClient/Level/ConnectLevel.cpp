@@ -43,7 +43,7 @@ void ConnectLevel::Tick(float deltaTime)
 		switch (packet.data[0])
 		{
 		case 'n':
-			logs.push_back("ìƒˆë¡œìš´ í”Œë ˆì´ì–´ê°€ ì ‘ì†í•˜ì˜€ìŠµë‹ˆë‹¤.");
+			logs.push_back("»õ·Î¿î ÇÃ·¹ÀÌ¾î°¡ Á¢¼ÓÇÏ¿´½À´Ï´Ù.");
 			playerCount = packet.data[1];
 			break;
 		case 'd':
@@ -71,7 +71,7 @@ void ConnectLevel::Render()
 	}
 
 	Utils::SetConsolePosition(Vector2(20, 15));
-	std::cout << "í”Œë ˆì´ì–´ ìˆ˜ : " << playerCount;
+	std::cout << "ÇÃ·¹ÀÌ¾î ¼ö : " << playerCount;
 }
 
 void ConnectLevel::InitUI()
@@ -79,16 +79,16 @@ void ConnectLevel::InitUI()
 	Utils::SetConsoleTextColor(Color::White);
 	
 	Utils::SetConsolePosition(Vector2(90, 7));
-	std::cout << "â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– " << '\n';
+	std::cout << "¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á" << '\n';
 
 	for (int i = 1; i <= 30; ++i)
 	{
 		Utils::SetConsolePosition(Vector2(90, 38 - i));
-		std::cout << "â–                                         â– " << '\n';
+		std::cout << "¡á                                        ¡á" << '\n';
 	}
 
 	Utils::SetConsolePosition(Vector2(90, 38));
-	std::cout << "â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– " << '\n';
+	std::cout << "¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á" << '\n';
 }
 
 void ConnectLevel::RecvData()
@@ -115,7 +115,7 @@ void ConnectLevel::RequestConnect()
 	bool success = client.Connect();
 	if (!success) return;
 
-	logs.push_back("ê²Œì„ ì„œë²„ì— ì ‘ì†í•˜ì˜€ìŠµë‹ˆë‹¤.");
+	logs.push_back("°ÔÀÓ ¼­¹ö¿¡ Á¢¼ÓÇÏ¿´½À´Ï´Ù.");
 }
 
 void ConnectLevel::RequestStart()
