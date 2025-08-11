@@ -42,10 +42,9 @@ void DungeonLevel::Tick(float deltaTime)
 		Packet packet = server.readQueue.front();
 		server.readQueue.pop();
 
-		logs.push_back("패킷 도착 : " + packet.data[0]);
-
 		SOCKET client = packet.src;
 		Actor* actor = clientToActor[client];
+		if (actor == nullptr) continue;
 
 		Packet sendPacket = { };
 
@@ -146,6 +145,7 @@ void DungeonLevel::Render()
 	
 	for (int i = 0; i < Player::MAX_STAMINA; i++)
 	{
+		if (player == nullptr) break;
 		playerStaminaText[i] = (i < player->GetStamina()) ? 'O' : ' ';
 		playerStaminaText[i + 1] = '\0';
 	}
@@ -174,7 +174,8 @@ void DungeonLevel::Render()
 
 		std::string log = logs[logs.size() - i];
 		Utils::SetConsolePosition(Vector2(92, 38 - i));
-
+		std::cout << "                    ";
+		Utils::SetConsolePosition(Vector2(92, 38 - i));
 		std::cout << log;
 	}
 }

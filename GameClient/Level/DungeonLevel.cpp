@@ -65,6 +65,7 @@ void DungeonLevel::Tick(float deltaTime)
 			logs.push_back("ID를 부여받았습니다. : " + std::to_string(ownID));
 
 			actor = idToActor[ownID];
+
 			if (actor->As<Player>()) actor->As<Player>()->SetOwner(true);
 			if (actor->As<Monster>()) actor->As<Monster>()->SetOwner(true);
 			break;
@@ -72,7 +73,6 @@ void DungeonLevel::Tick(float deltaTime)
 			actorID = packet.data[1];
 			posX = packet.data[2];
 			posY = packet.data[3];
-			logs.push_back("이동 데이터 도착 : " + std::to_string(actorID));
 
 			if (idToActor.find(actorID) == idToActor.end()) break;
 
@@ -130,10 +130,10 @@ void DungeonLevel::Tick(float deltaTime)
 		}
 	}
 
-	interactionSystem.ProgressTask(tasks, players, deltaTime);
-	interactionSystem.CheckOpenExit(*this, 1);
-	interactionSystem.EscapePlayer(exits, players);
-	interactionSystem.KillPlayer(monster, players);
+	//interactionSystem.ProgressTask(tasks, players, deltaTime);
+	//interactionSystem.CheckOpenExit(*this, 1);
+	//interactionSystem.EscapePlayer(exits, players);
+	//interactionSystem.KillPlayer(monster, players);
 
 	gameOverSystem.CheckGameOver();
 
@@ -154,6 +154,7 @@ void DungeonLevel::Render()
 	
 	for (int i = 0; i < Player::MAX_STAMINA; i++)
 	{
+		if (player == nullptr) break;
 		playerStaminaText[i] = (i < player->GetStamina()) ? 'O' : ' ';
 		playerStaminaText[i + 1] = '\0';
 	}
@@ -180,7 +181,8 @@ void DungeonLevel::Render()
 
 		std::string log = logs[logs.size() - i];
 		Utils::SetConsolePosition(Vector2(92, 38 - i));
-		Utils::SetConsoleTextColor(Color::White);
+		std::cout << "                    ";
+		Utils::SetConsolePosition(Vector2(92, 38 - i));
 		std::cout << log;
 	}
 }
