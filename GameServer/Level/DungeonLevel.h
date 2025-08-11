@@ -6,6 +6,7 @@
 #include "Interface/IMovable.h"
 #include "Gimmick/InteractionSystem.h"
 #include "Gimmick/GameOverSystem.h"
+#include "Gimmick/UISystem.h"
 
 #include <unordered_map>
 #include <vector>
@@ -28,22 +29,16 @@ public:
 	virtual bool Movable(const Vector2& targetPos);
 
 private:
-	void InitUI();
-
 	void ReadDungeonFile(const char* fileName);
-	
 	void BindActorID();
 
 private:
 	char dungeon[100][100] = { };
-	Player* player;
-	Monster* monster;
 
 	std::unordered_map<SOCKET, Actor*> clientToActor;
 	std::unordered_map<int, Actor*> idToActor;
 
 	InteractionSystem interactionSystem;
 	GameOverSystem gameOverSystem;
-
-	std::vector<std::string> logs;
+	UISystem uiSystem;
 };

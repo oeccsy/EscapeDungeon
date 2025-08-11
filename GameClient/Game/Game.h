@@ -2,6 +2,7 @@
 
 #include "Engine.h"
 #include "Networking/Client.h"
+#include "Utils/Logs.h"
 
 class Game
 {
@@ -17,6 +18,7 @@ public:
 private:
 	Engine engine;
 	Client client;
+	Logs logs;
 
 	static Game* instance;
 };

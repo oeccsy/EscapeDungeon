@@ -4,7 +4,6 @@
 #include "Networking/Packet.h"
 #include "Math/Vector2.h"
 #include "Utils/Utils.h"
-
 #include "Game/Game.h"
 
 #include <iostream>
@@ -19,19 +18,12 @@ ConnectLevel::ConnectLevel()
 	FD_ZERO(&server.readSet);
 	FD_SET(server.listenSocket, &server.readSet);
 
-	logs.push_back("==== 서버 시작 ====");
+	Logs::Get().AddLog({ "==== 서버 시작 ====" });
+
+	uiSystem.InitLogArea();
 }
 
-ConnectLevel::~ConnectLevel()
-{
-}
-
-void ConnectLevel::BeginPlay()
-{
-	super::BeginPlay();
-
-	InitUI();
-}
+ConnectLevel::~ConnectLevel() { }
 
 void ConnectLevel::Tick(float deltaTime)
 {
@@ -68,50 +60,17 @@ void ConnectLevel::Render()
 	super::Render();
 
 	Utils::SetConsoleTextColor(Color::White);
-
-	for (int i = 1; i <= 20; ++i)
-	{
-		if (logs.size() < i) break;
-
-		std::string log = logs[logs.size() - i];
-		Utils::SetConsolePosition(Vector2(92, 38 - i));
-		
-		std::cout << log;
-	}
-
 	Utils::SetConsolePosition(Vector2(20, 15));
 	std::cout << "플레이어 수 : " << playerCount;
-}
-
-void ConnectLevel::InitUI()
-{
-	Utils::SetConsoleTextColor(Color::White);
-
-	Utils::SetConsolePosition(Vector2(90, 7));
-	std::cout << "■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■\n";
-
-	for (int i = 1; i <= 30; ++i)
-	{
-		Utils::SetConsolePosition(Vector2(90, 38 - i));
-		std::cout << "■                                        ■" << '\n';
-	}
-
-	Utils::SetConsolePosition(Vector2(90, 38));
-	std::cout << "■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■\n";
 }
 
 void ConnectLevel::PlayerJoin()
 {
 	playerCount++;
-	logs.push_back("새로운 플레이어가 접속하였습니다.");
+	Logs::Get().AddLog({ "새로운 플레이어가 접속했습니다." });
 	
 	Server& server = Server::Get();
 
 	char buffer[100] = { 'n', playerCount };
 	server.SendAll(buffer, sizeof(buffer));
-}
-
-void ConnectLevel::PlayerLeave()
-{
-
 }

@@ -183,6 +183,8 @@ xcopy $(SolutionDir)\Settings $(OutDir)..\Settings\ /y</Command>
     <ClCompile Include="Game\Game.cpp" />
     <ClCompile Include="Gimmick\GameOverSystem.cpp" />
     <ClCompile Include="Gimmick\InteractionSystem.cpp" />
+    <ClCompile Include="Gimmick\UISystem.cpp" />
+    <ClCompile Include="Utils\Logs.cpp" />
     <ClCompile Include="Level\ConnectLevel.cpp" />
     <ClCompile Include="Level\DungeonLevel.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -198,6 +200,8 @@ xcopy $(SolutionDir)\Settings $(OutDir)..\Settings\ /y</Command>
     <ClInclude Include="Game\Game.h" />
     <ClInclude Include="Gimmick\GameOverSystem.h" />
     <ClInclude Include="Gimmick\InteractionSystem.h" />
+    <ClInclude Include="Gimmick\UISystem.h" />
+    <ClInclude Include="Utils\Logs.h" />
     <ClInclude Include="Interface\IMovable.h" />
     <ClInclude Include="Level\ConnectLevel.h" />
     <ClInclude Include="Level\DungeonLevel.h" />

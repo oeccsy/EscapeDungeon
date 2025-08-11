@@ -8,11 +8,12 @@
 #include "Actor/Actor.h"
 #include "Actor/Player.h"
 #include "Actor/Monster.h"
-#include "Actor/Task.h"
 #include "Actor/Road.h"
+#include "Actor/Task.h"
 #include "Actor/Exit.h"
 
 #include "Utils/Utils.h"
+#include "Utils/Logs.h"
 
 #include <iostream>
 #include <vector>
@@ -21,9 +22,10 @@ DungeonLevel::DungeonLevel()
 {
 	ReadDungeonFile("Map_2.txt");
 	BindActorID();
-	InitUI();
 
-	logs.push_back("==== 던전 시작 ====");
+	Logs::Get().AddLog({ "==== 게임 시작 ====" });
+	
+	uiSystem.InitLogArea();
 }
 
 DungeonLevel::~DungeonLevel() {}
@@ -72,6 +74,7 @@ void DungeonLevel::Tick(float deltaTime)
 	std::vector<Task*> tasks;
 	std::vector<Player*> players;
 	std::vector<Exit*> exits;
+	Monster* monster = nullptr;
 
 	for (Actor* const actor : actors)
 	{
@@ -95,6 +98,8 @@ void DungeonLevel::Tick(float deltaTime)
 			exits.emplace_back(exit);
 			continue;
 		}
+
+		monster = actor->As<Monster>();
 	}
 
 	interactionSystem.ProgressTask(tasks, players, deltaTime);
@@ -120,7 +125,6 @@ void DungeonLevel::Tick(float deltaTime)
 		}
 	}
 
-	
 	while (!server.writeQueue.empty())
 	{
 		Packet packet = server.writeQueue.front();
@@ -141,65 +145,27 @@ void DungeonLevel::Render()
 {
 	super::Render();
 
-	char playerStaminaText[20] = { };
-	
-	for (int i = 0; i < Player::MAX_STAMINA; i++)
+	std::vector<Player*> players;
+	Monster* monster = nullptr;
+
+	for (Actor* const actor : actors)
 	{
-		if (player == nullptr) break;
-		playerStaminaText[i] = (i < player->GetStamina()) ? 'O' : ' ';
-		playerStaminaText[i + 1] = '\0';
+		Player* player = actor->As<Player>();
+		if (player)
+		{
+			players.emplace_back(player);
+			continue;
+		}
+
+		monster = actor->As<Monster>();
 	}
 
-	Utils::SetConsolePosition(Vector2(100, 1));
-	Utils::SetConsoleTextColor(Color::White);
-	std::cout << playerStaminaText;
-
-	char monsterStaminaText[20] = { };
-
-	for (int i = 0; i < Monster::MAX_STAMINA; i++)
-	{
-		monsterStaminaText[i] = (i < monster->GetStamina()) ? 'X' : ' ';
-		monsterStaminaText[i + 1] = '\0';
-	}
-
-	Utils::SetConsolePosition(Vector2(100, 3));
-	Utils::SetConsoleTextColor(Color::White);
-	std::cout << monsterStaminaText;
-
-	Utils::SetConsoleTextColor(Color::White);
-
-	for (int i = 1; i <= 20; ++i)
-	{
-		if (logs.size() < i) break;
-
-		std::string log = logs[logs.size() - i];
-		Utils::SetConsolePosition(Vector2(92, 38 - i));
-		std::cout << "                    ";
-		Utils::SetConsolePosition(Vector2(92, 38 - i));
-		std::cout << log;
-	}
+	uiSystem.RenderStaminaUI(players, monster);
 }
 
 bool DungeonLevel::Movable(const Vector2& targetPos)
 {
 	return dungeon[targetPos.y][targetPos.x] == '#';
-}
-
-void DungeonLevel::InitUI()
-{
-	Utils::SetConsoleTextColor(Color::White);
-
-	Utils::SetConsolePosition(Vector2(90, 7));
-	std::cout << "■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■\n";
-
-	for (int i = 1; i <= 30; ++i)
-	{
-		Utils::SetConsolePosition(Vector2(90, 38 - i));
-		std::cout << "■                                        ■" << '\n';
-	}
-
-	Utils::SetConsolePosition(Vector2(90, 38));
-	std::cout << "■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■\n";
 }
 
 void DungeonLevel::ReadDungeonFile(const char* fileName)
@@ -243,11 +209,11 @@ void DungeonLevel::ReadDungeonFile(const char* fileName)
 				break;
 			case 'P':
 				AddActor(new Road({ j, i }));
-				AddActor(player = new Player({ j, i }, this));
+				AddActor(new Player({ j, i }, this));
 				break;
 			case 'M':
 				AddActor(new Road({ j, i }));
-				AddActor(monster = new Monster({ j, i }, this));
+				AddActor(new Monster({ j, i }, this));
 				break;
 			case 'T':
 				AddActor(new Road({ j, i }));

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Level/Level.h"
-#include "Networking/Client.h"
+#include "Gimmick/UISystem.h"
 
 #include <vector>
 #include <string>
@@ -14,13 +14,10 @@ public:
 	ConnectLevel();
 	~ConnectLevel();
 
-	virtual void BeginPlay() override;
 	virtual void Tick(float deltaTime) override;
 	virtual void Render() override;
 
 private:
-	void InitUI();
-	
 	void RecvData();
 
 	void RequestConnect();
@@ -28,5 +25,6 @@ private:
 
 private:
 	int playerCount = 0;
-	std::vector<std::string> logs;
+
+	UISystem uiSystem;
 };

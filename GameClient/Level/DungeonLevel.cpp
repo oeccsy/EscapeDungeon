@@ -5,13 +5,15 @@
 #include "Networking//Client.h"
 #include "Networking/Packet.h"
 
+
 #include "Actor/Player.h"
 #include "Actor/Monster.h"
-#include "Actor/Task.h"
 #include "Actor/Road.h"
+#include "Actor/Task.h"
 #include "Actor/Exit.h"
 
 #include "Utils/Utils.h"
+#include "Utils/Logs.h"
 
 #include <iostream>
 #include <vector>
@@ -20,15 +22,13 @@ DungeonLevel::DungeonLevel()
 {
 	ReadDungeonFile("Map_2.txt");
 	BindActorID();
-	InitUI();
+	
+	Logs::Get().AddLog({ "==== 게임 시작 ====" });
+
+	uiSystem.InitLogArea();
 }
 
 DungeonLevel::~DungeonLevel() {}
-
-void DungeonLevel::BeginPlay()
-{
-	super::BeginPlay();
-}
 
 void DungeonLevel::Tick(float deltaTime)
 {
@@ -58,11 +58,15 @@ void DungeonLevel::Tick(float deltaTime)
 
 		Player* player = nullptr;
 
+		char logData[100];
+
 		switch (packet.data[0])
 		{
 		case 'i':
 			ownID = packet.data[1];
-			logs.push_back("ID를 부여받았습니다. : " + std::to_string(ownID));
+
+			sprintf_s(logData, sizeof(logData), "ID를 부여받았습니다. : %d", ownID);
+			Logs::Get().AddLog({ logData });
 
 			actor = idToActor[ownID];
 
@@ -87,7 +91,7 @@ void DungeonLevel::Tick(float deltaTime)
 			player = idToActor.find(actorID)->second->As<Player>();
 			player->Die();
 
-			logs.push_back(actorID + " 플레이어가 몬스터의 밥도둑이 되었다.");
+			Logs::Get().AddLog({ "어떤 플레이어가 사망했습니다." });
 			break;
 		case 'e':
 			int actorID = packet.data[1];
@@ -97,7 +101,8 @@ void DungeonLevel::Tick(float deltaTime)
 			player = idToActor.find(actorID)->second->As<Player>();
 			player->Escape();
 
-			logs.push_back(actorID + " 플레이어가 탈출에 성공했다!");
+			sprintf_s(logData, sizeof(logData), "%d 플레이어가 탈출에 성공했다!", actorID);
+			Logs::Get().AddLog({ logData });
 			break;
 		}
 	}
@@ -150,41 +155,16 @@ void DungeonLevel::Render()
 {
 	super::Render();
 
-	char playerStaminaText[20] = { };
+	if (idToActor.find(ownID) == idToActor.end()) return;
 	
-	for (int i = 0; i < Player::MAX_STAMINA; i++)
-	{
-		if (player == nullptr) break;
-		playerStaminaText[i] = (i < player->GetStamina()) ? 'O' : ' ';
-		playerStaminaText[i + 1] = '\0';
-	}
+	Player* player = nullptr;
+	Monster* monster = nullptr;
 
-	Utils::SetConsolePosition(Vector2(100, 1));
-	Utils::SetConsoleTextColor(Color::White);
-	std::cout << playerStaminaText;
+	player = idToActor[ownID]->As<Player>();
+	monster = idToActor[ownID]->As<Monster>();
 
-	char monsterStaminaText[20] = { };
-
-	for (int i = 0; i < Monster::MAX_STAMINA; i++)
-	{
-		monsterStaminaText[i] = (i < monster->GetStamina()) ? 'X' : ' ';
-		monsterStaminaText[i + 1] = '\0';
-	}
-
-	Utils::SetConsolePosition(Vector2(100, 3));
-	Utils::SetConsoleTextColor(Color::White);
-	std::cout << monsterStaminaText;
-
-	for (int i = 1; i <= 20; ++i)
-	{
-		if (logs.size() < i) break;
-
-		std::string log = logs[logs.size() - i];
-		Utils::SetConsolePosition(Vector2(92, 38 - i));
-		std::cout << "                    ";
-		Utils::SetConsolePosition(Vector2(92, 38 - i));
-		std::cout << log;
-	}
+	uiSystem.RenderStaminaUI(player);
+	uiSystem.RenderStaminaUI(monster);
 }
 
 bool DungeonLevel::Movable(const Vector2& targetPos)
@@ -193,23 +173,6 @@ bool DungeonLevel::Movable(const Vector2& targetPos)
 	if (targetPosActor == '#' || targetPosActor == 'T' || targetPosActor == 'E') return true;
 
 	return false;
-}
-
-void DungeonLevel::InitUI()
-{
-	Utils::SetConsoleTextColor(Color::White);
-
-	Utils::SetConsolePosition(Vector2(90, 7));
-	std::cout << "■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■\n";
-
-	for (int i = 1; i <= 30; ++i)
-	{
-		Utils::SetConsolePosition(Vector2(90, 38 - i));
-		std::cout << "■                                        ■";
-	}
-
-	Utils::SetConsolePosition(Vector2(90, 38));
-	std::cout << "■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■\n";
 }
 
 void DungeonLevel::ReadDungeonFile(const char* fileName)
@@ -253,11 +216,11 @@ void DungeonLevel::ReadDungeonFile(const char* fileName)
 				break;
 			case 'P':
 				AddActor(new Road({ j, i }));
-				AddActor(player = new Player({ j, i }, this));
+				AddActor(new Player({ j, i }, this));
 				break;
 			case 'M':
 				AddActor(new Road({ j, i }));
-				AddActor(monster = new Monster({ j, i }, this));
+				AddActor(new Monster({ j, i }, this));
 				break;
 			case 'T':
 				AddActor(new Road({ j, i }));

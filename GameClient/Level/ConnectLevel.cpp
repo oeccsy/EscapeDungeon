@@ -1,5 +1,6 @@
 ﻿#include "ConnectLevel.h"
 
+#include "Networking/Client.h"
 #include "Networking/Packet.h"
 #include "Math/Vector2.h"
 #include "Utils/Utils.h"
@@ -14,26 +15,19 @@ ConnectLevel::ConnectLevel()
 
 	FD_ZERO(&client.readSet);
 	FD_SET(client.clientSocket, &client.readSet);
+
+	uiSystem.InitLogArea();
 }
 
-ConnectLevel::~ConnectLevel()
-{
-}
-
-void ConnectLevel::BeginPlay()
-{
-	super::BeginPlay();
-
-	InitUI();
-}
+ConnectLevel::~ConnectLevel() { }
 
 void ConnectLevel::Tick(float deltaTime)
 {
 	super::Tick(deltaTime);
 
-	RecvData();
-
 	Client& client = Client::Get();
+	
+	RecvData();
 
 	while (!client.readQueue.empty())
 	{
@@ -43,7 +37,7 @@ void ConnectLevel::Tick(float deltaTime)
 		switch (packet.data[0])
 		{
 		case 'n':
-			logs.push_back("새로운 플레이어가 접속하였습니다.");
+			Logs::Get().AddLog({ "새로운 플레이어가 접속하였습니다." });
 			playerCount = packet.data[1];
 			break;
 		case 'd':
@@ -60,35 +54,9 @@ void ConnectLevel::Render()
 {
 	super::Render();
 
-	for (int i = 1; i <= 20; ++i)
-	{
-		if (logs.size() < i) break;
-
-		std::string log = logs[logs.size() - i];
-		Utils::SetConsolePosition(Vector2(92, 38 - i));
-		Utils::SetConsoleTextColor(Color::White);
-		std::cout << log;
-	}
-
+	Utils::SetConsoleTextColor(Color::White);
 	Utils::SetConsolePosition(Vector2(20, 15));
 	std::cout << "플레이어 수 : " << playerCount;
-}
-
-void ConnectLevel::InitUI()
-{
-	Utils::SetConsoleTextColor(Color::White);
-	
-	Utils::SetConsolePosition(Vector2(90, 7));
-	std::cout << "■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■" << '\n';
-
-	for (int i = 1; i <= 30; ++i)
-	{
-		Utils::SetConsolePosition(Vector2(90, 38 - i));
-		std::cout << "■                                        ■" << '\n';
-	}
-
-	Utils::SetConsolePosition(Vector2(90, 38));
-	std::cout << "■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■" << '\n';
 }
 
 void ConnectLevel::RecvData()
@@ -115,7 +83,7 @@ void ConnectLevel::RequestConnect()
 	bool success = client.Connect();
 	if (!success) return;
 
-	logs.push_back("게임 서버에 접속하였습니다.");
+	Logs::Get().AddLog({ "게임 서버에 접속했습니다." });
 }
 
 void ConnectLevel::RequestStart()

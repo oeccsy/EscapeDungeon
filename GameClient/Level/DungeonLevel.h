@@ -4,6 +4,7 @@
 #include "Interface/IMovable.h"
 #include "Gimmick/InteractionSystem.h"
 #include "Gimmick/GameOverSystem.h"
+#include "Gimmick/UISystem.h"
 
 #include <unordered_map>
 #include <vector>
@@ -20,30 +21,24 @@ public:
 	DungeonLevel();
 	~DungeonLevel();
 
-	virtual void BeginPlay() override;
 	virtual void Tick(float deltaTime) override;
 	virtual void Render() override;
 
 	virtual bool Movable(const Vector2& targetPos);
 
-	void InitUI();
-
+private:
+	void ReadDungeonFile(const char* fileName);
 	void BindActorID();
 	void SetID(int id);
 
 private:
-	void ReadDungeonFile(const char* fileName);
-
-private:
 	char dungeon[100][100] = { };
-	Player* player;
-	Monster* monster;
+
+	std::unordered_map<int, Actor*> idToActor;
 
 	InteractionSystem interactionSystem;
 	GameOverSystem gameOverSystem;
+	UISystem uiSystem;
 
-	std::unordered_map<int, Actor*> idToActor;
 	int ownID = -1;
-
-	std::vector<std::string> logs;
 };
