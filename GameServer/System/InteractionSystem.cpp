@@ -5,7 +5,7 @@
 #include "Actor/Exit.h"
 #include "Actor/Monster.h"
 
-#include "Networking/Packet.h"
+#include "Networking/Command.h"
 #include "Networking/Server.h"
 
 #include <vector>
@@ -42,7 +42,7 @@ void InteractionSystem::EscapePlayer(std::vector<Exit*>& exits, std::vector<Play
 			{
 				player->Escape();
 
-				Packet packet = { };
+				Command packet = { };
 				packet.data[0] = 'e';
 				packet.data[1] = player->GetActorID();
 
@@ -62,7 +62,7 @@ void InteractionSystem::KillPlayer(Monster* monster, std::vector<Player*>& playe
 		{
 			monster->Kill(player);
 
-			Packet packet = { };
+			Command packet = { };
 			packet.data[0] = 'k';
 			packet.data[1] = player->GetActorID();
 

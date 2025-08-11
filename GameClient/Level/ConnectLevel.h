@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Level/Level.h"
-#include "Gimmick/UISystem.h"
+#include "System/UISystem.h"
 
 #include <vector>
 #include <string>

@@ -183,7 +183,7 @@ xcopy $(OutDir)\Engine.dll ..\Lib\Engine\ /y</Command>
     <ClInclude Include="Math\Mathf.h" />
     <ClInclude Include="Math\Vector2.h" />
     <ClInclude Include="Networking\Client.h" />
-    <ClInclude Include="Networking\Packet.h" />
+    <ClInclude Include="Networking\Command.h" />
     <ClInclude Include="Networking\Server.h" />
     <ClInclude Include="Utils\Color.h" />
     <ClInclude Include="Utils\Utils.h" />

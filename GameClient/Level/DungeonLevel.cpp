@@ -3,7 +3,7 @@
 #include "Engine.h"
 
 #include "Networking//Client.h"
-#include "Networking/Packet.h"
+#include "Networking/Command.h"
 
 
 #include "Actor/Player.h"
@@ -38,7 +38,7 @@ void DungeonLevel::Tick(float deltaTime)
 
 	while (true)
 	{
-		Packet packet = { };
+		Command packet = { };
 
 		bool success = client.Recv(packet.data, sizeof(packet.data));
 		if (success == false) break;
@@ -48,7 +48,7 @@ void DungeonLevel::Tick(float deltaTime)
 
 	while (!client.readQueue.empty())
 	{
-		Packet packet = client.readQueue.front();
+		Command packet = client.readQueue.front();
 		client.readQueue.pop();
 
 		Actor* actor = nullptr;
@@ -144,7 +144,7 @@ void DungeonLevel::Tick(float deltaTime)
 
 	while (!client.writeQueue.empty())
 	{
-		Packet packet = client.writeQueue.front();
+		Command packet = client.writeQueue.front();
 		client.writeQueue.pop();
 
 		client.Send(packet.data, sizeof(packet.data));

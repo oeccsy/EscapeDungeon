@@ -36,13 +36,13 @@
     <ClCompile Include="Actor\Task.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Gimmick\InteractionSystem.cpp">
+    <ClCompile Include="System\InteractionSystem.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Actor\Exit.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Gimmick\GameOverSystem.cpp">
+    <ClCompile Include="System\GameOverSystem.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Actor\Monster.cpp">
@@ -54,7 +54,7 @@
     <ClCompile Include="Utils\Logs.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Gimmick\UISystem.cpp">
+    <ClCompile Include="System\UISystem.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -80,13 +80,13 @@
     <ClInclude Include="Actor\Task.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Gimmick\InteractionSystem.h">
+    <ClInclude Include="System\InteractionSystem.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Actor\Exit.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Gimmick\GameOverSystem.h">
+    <ClInclude Include="System\GameOverSystem.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Actor\Monster.h">
@@ -98,7 +98,7 @@
     <ClInclude Include="Utils\Logs.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Gimmick\UISystem.h">
+    <ClInclude Include="System\UISystem.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

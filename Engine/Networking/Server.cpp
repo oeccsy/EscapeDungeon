@@ -191,7 +191,7 @@ void Server::Recv()
 
 		if (FD_ISSET(curSocket, &readSetCopy) == false) continue;
 
-		Packet packet = { };
+		Command packet = { };
 		packet.src = curSocket;
 		int recvLen = ::recv(curSocket, packet.data, sizeof(packet.data), 0);
 

@@ -181,9 +181,10 @@ xcopy $(SolutionDir)\Settings $(OutDir)..\Settings\ /y</Command>
     <ClCompile Include="Actor\Road.cpp" />
     <ClCompile Include="Actor\Task.cpp" />
     <ClCompile Include="Game\Game.cpp" />
-    <ClCompile Include="Gimmick\GameOverSystem.cpp" />
-    <ClCompile Include="Gimmick\InteractionSystem.cpp" />
-    <ClCompile Include="Gimmick\UISystem.cpp" />
+    <ClCompile Include="System\CommandHandler.cpp" />
+    <ClCompile Include="System\GameOverSystem.cpp" />
+    <ClCompile Include="System\InteractionSystem.cpp" />
+    <ClCompile Include="System\UISystem.cpp" />
     <ClCompile Include="Utils\Logs.cpp" />
     <ClCompile Include="Level\ConnectLevel.cpp" />
     <ClCompile Include="Level\DungeonLevel.cpp" />
@@ -198,9 +199,10 @@ xcopy $(SolutionDir)\Settings $(OutDir)..\Settings\ /y</Command>
     <ClInclude Include="Actor\Road.h" />
     <ClInclude Include="Actor\Task.h" />
     <ClInclude Include="Game\Game.h" />
-    <ClInclude Include="Gimmick\GameOverSystem.h" />
-    <ClInclude Include="Gimmick\InteractionSystem.h" />
-    <ClInclude Include="Gimmick\UISystem.h" />
+    <ClInclude Include="System\GameOverSystem.h" />
+    <ClInclude Include="System\InteractionSystem.h" />
+    <ClInclude Include="System\CommandHandler.h" />
+    <ClInclude Include="System\UISystem.h" />
     <ClInclude Include="Utils\Logs.h" />
     <ClInclude Include="Interface\IMovable.h" />
     <ClInclude Include="Level\ConnectLevel.h" />

@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "Core.h"
-#include "Packet.h"
+#include "Command.h"
 
 #include <vector>
 #include <queue>
@@ -33,8 +33,8 @@ public:
 	fd_set readSet;
 	fd_set writeSet;
 
-	std::queue<Packet> readQueue;
-	std::queue<Packet> writeQueue;
+	std::queue<Command> readQueue;
+	std::queue<Command> writeQueue;
 
 	static Server* instance;
 };

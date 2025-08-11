@@ -1,7 +1,7 @@
 ﻿#include "ConnectLevel.h"
 
 #include "Networking/Client.h"
-#include "Networking/Packet.h"
+#include "Networking/Command.h"
 #include "Math/Vector2.h"
 #include "Utils/Utils.h"
 #include "Game/Game.h"
@@ -31,7 +31,7 @@ void ConnectLevel::Tick(float deltaTime)
 
 	while (!client.readQueue.empty())
 	{
-		Packet packet = client.readQueue.front();
+		Command packet = client.readQueue.front();
 		client.readQueue.pop();
 
 		switch (packet.data[0])
@@ -65,7 +65,7 @@ void ConnectLevel::RecvData()
 
 	while (true)
 	{
-		Packet packet = { };
+		Command packet = { };
 
 		bool success = client.Recv(packet.data, 100);
 		if (success == false) break;

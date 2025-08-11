@@ -2,9 +2,9 @@
 
 #include "Level/Level.h"
 #include "Interface/IMovable.h"
-#include "Gimmick/InteractionSystem.h"
-#include "Gimmick/GameOverSystem.h"
-#include "Gimmick/UISystem.h"
+#include "System/InteractionSystem.h"
+#include "System/GameOverSystem.h"
+#include "System/UISystem.h"
 
 #include <unordered_map>
 #include <vector>

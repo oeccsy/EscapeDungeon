@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core.h"
-#include "Packet.h"
+#include "Command.h"
 
 #include <queue>
 
@@ -25,8 +25,8 @@ public:
 
 	fd_set readSet;
 
-	std::queue<Packet> readQueue;
-	std::queue<Packet> writeQueue;
+	std::queue<Command> readQueue;
+	std::queue<Command> writeQueue;
 
 	bool isConnected = false;
 

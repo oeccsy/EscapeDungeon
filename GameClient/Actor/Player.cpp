@@ -5,7 +5,7 @@
 #include "Math/Vector2.h"
 #include "Collider/BoxCollider.h"
 #include "Networking/Client.h"
-#include "Networking/Packet.h"
+#include "Networking/Command.h"
 
 int Player::escapeCount = 0;
 int Player::deadCount = 0;
@@ -51,7 +51,7 @@ void Player::Move()
 
 	if (Input::Get().GetKeyDown(VK_RIGHT))
 	{
-		Packet packet = { };
+		Command packet = { };
 		packet.data[0] = 'r';
 
 		client.writeQueue.push(packet);
@@ -67,7 +67,7 @@ void Player::Move()
 
 	if (Input::Get().GetKeyDown(VK_LEFT))
 	{
-		Packet packet = { };
+		Command packet = { };
 		packet.data[0] = 'l';
 
 		client.writeQueue.push(packet);
@@ -83,7 +83,7 @@ void Player::Move()
 
 	if (Input::Get().GetKeyDown(VK_UP))
 	{
-		Packet packet = { };
+		Command packet = { };
 		packet.data[0] = 'u';
 
 		client.writeQueue.push(packet);
@@ -99,7 +99,7 @@ void Player::Move()
 
 	if (Input::Get().GetKeyDown(VK_DOWN))
 	{
-		Packet packet = { };
+		Command packet = { };
 		packet.data[0] = 'd';
 
 		client.writeQueue.push(packet);

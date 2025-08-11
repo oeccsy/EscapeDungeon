@@ -1,7 +1,7 @@
 ﻿#include "ConnectLevel.h"
 
 #include "Networking/Server.h"
-#include "Networking/Packet.h"
+#include "Networking/Command.h"
 #include "Math/Vector2.h"
 #include "Utils/Utils.h"
 #include "Game/Game.h"
@@ -42,7 +42,7 @@ void ConnectLevel::Tick(float deltaTime)
 
 	while (!server.readQueue.empty())
 	{
-		Packet packet = server.readQueue.front();
+		Command packet = server.readQueue.front();
 		server.readQueue.pop();
 
 		switch (packet.data[0])

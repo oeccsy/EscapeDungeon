@@ -3,7 +3,7 @@
 #include "Engine.h"
 
 #include "Networking/Server.h"
-#include "Networking/Packet.h"
+#include "Networking/Command.h"
 
 #include "Actor/Actor.h"
 #include "Actor/Player.h"
@@ -41,14 +41,14 @@ void DungeonLevel::Tick(float deltaTime)
 
 	while (!server.readQueue.empty())
 	{
-		Packet packet = server.readQueue.front();
+		Command packet = server.readQueue.front();
 		server.readQueue.pop();
 
 		SOCKET client = packet.src;
 		Actor* actor = clientToActor[client];
 		if (actor == nullptr) continue;
 
-		Packet sendPacket = { };
+		Command sendPacket = { };
 
 		switch (packet.data[0])
 		{
@@ -115,7 +115,7 @@ void DungeonLevel::Tick(float deltaTime)
 		{
 			Vector2 pos = actor->GetPosition();
 			
-			Packet packet = { };
+			Command packet = { };
 			packet.data[0] = 'p';
 			packet.data[1] = actor->GetActorID();
 			packet.data[2] = pos.x;
@@ -127,7 +127,7 @@ void DungeonLevel::Tick(float deltaTime)
 
 	while (!server.writeQueue.empty())
 	{
-		Packet packet = server.writeQueue.front();
+		Command packet = server.writeQueue.front();
 		server.writeQueue.pop();
 
 		if (packet.dest == INVALID_SOCKET)
@@ -245,7 +245,7 @@ void DungeonLevel::BindActorID()
 			idToActor.insert({ id, actor });
 			clientToActor.insert({ *it, actor });
 
-			Packet packet = { };
+			Command packet = { };
 			packet.dest = *it;
 			packet.data[0] = 'i';
 			packet.data[1] = id;
@@ -264,7 +264,7 @@ void DungeonLevel::BindActorID()
 			idToActor.insert({ id, actor });
 			clientToActor.insert({ *it, actor });
 
-			Packet packet = { };
+			Command packet = { };
 			packet.dest = *it;
 			packet.data[0] = 'i';
 			packet.data[1] = id;
