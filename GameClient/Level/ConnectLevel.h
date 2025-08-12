@@ -19,7 +19,7 @@ public:
 	virtual void Render() override;
 
 	void NewPlayerJoined(int playerCount);
-	void GameStart();
+	void GameStart(int index);
 
 private:
 	void RecvData();

@@ -43,7 +43,7 @@ void Monster::Move()
 
 	Client& client = Client::Get();
 
-	if (Input::Get().GetKeyDown(VK_UP))
+	if (Input::Get().GetKeyDown('W'))
 	{
 		Command command;
 		command.data[0] = static_cast<char>(CommandType::Up);
@@ -51,7 +51,7 @@ void Monster::Move()
 		client.writeQueue.push(command);
 	}
 
-	if (Input::Get().GetKeyDown(VK_DOWN))
+	if (Input::Get().GetKeyDown('S'))
 	{
 		Command command;
 		command.data[0] = static_cast<char>(CommandType::Down);
@@ -59,7 +59,7 @@ void Monster::Move()
 		client.writeQueue.push(command);
 	}
 	
-	if (Input::Get().GetKeyDown(VK_LEFT))
+	if (Input::Get().GetKeyDown('A'))
 	{
 		Command command;
 		command.data[0] = static_cast<char>(CommandType::Left);
@@ -67,7 +67,7 @@ void Monster::Move()
 		client.writeQueue.push(command);
 	}
 
-	if (Input::Get().GetKeyDown(VK_RIGHT))
+	if (Input::Get().GetKeyDown('D'))
 	{
 		Command command;
 		command.data[0] = static_cast<char>(CommandType::Right);

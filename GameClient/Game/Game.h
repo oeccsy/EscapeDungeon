@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Engine.h"
 #include "Networking/Client.h"
@@ -10,7 +10,7 @@ public:
 	Game();
 	~Game();
 
-	void LoadDungeonLevel();
+	void LoadDungeonLevel(int index);
 	void Run();
 	
 	static Game& Get();

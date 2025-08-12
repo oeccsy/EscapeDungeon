@@ -28,6 +28,19 @@ DungeonLevel::DungeonLevel() : commandHandler(*this)
 	Logs::Get().AddLog({ "==== 게임 시작 ====" });
 }
 
+DungeonLevel::DungeonLevel(int index) : commandHandler(*this)
+{
+	char fileName[20];
+	sprintf_s(fileName, sizeof(fileName), "Map_%d.txt", index);
+
+	ReadDungeonFile(fileName);
+	BindActorID();
+
+	uiSystem.InitLogArea();
+
+	Logs::Get().AddLog({ "==== 게임 시작 ====" });
+}
+
 DungeonLevel::~DungeonLevel() {}
 
 void DungeonLevel::Tick(float deltaTime)

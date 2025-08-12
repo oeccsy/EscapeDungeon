@@ -22,6 +22,7 @@ class DungeonLevel : public Level, public IMovable
 
 public:
 	DungeonLevel();
+	DungeonLevel(int index);
 	~DungeonLevel();
 
 	virtual void Tick(float deltaTime) override;

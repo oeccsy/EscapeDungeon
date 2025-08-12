@@ -79,10 +79,10 @@ void ConnectLevel::NewPlayerJoined(int playerCount)
 	Logs::Get().AddLog({ "새로운 플레이어가 접속했습니다." });
 }
 
-void ConnectLevel::GameStart()
+void ConnectLevel::GameStart(int index)
 {
 	Player::playerCount = playerCount - 1;
-	Game::Get().LoadDungeonLevel();
+	Game::Get().LoadDungeonLevel(index);
 }
 
 void ConnectLevel::RequestConnect()

@@ -13,10 +13,10 @@ Game::Game()
 
 Game::~Game() { }
 
-void Game::LoadDungeonLevel()
+void Game::LoadDungeonLevel(int index = 1)
 {
 	system("cls");
-	engine.AddLevel(new DungeonLevel());
+	engine.AddLevel(new DungeonLevel(index));
 }
 
 void Game::Run()

@@ -29,7 +29,7 @@ void CommandHandler::Execute(Command command)
 	case CommandType::Ready:
 		break;
 	case CommandType::GameStart:
-		if (connectLevel) connectLevel->GameStart();
+		if (connectLevel) connectLevel->GameStart(command.data[1]);
 		break;
 	case CommandType::ID:
 		if (dungeonLevel) dungeonLevel->SetID(command.data[1]);

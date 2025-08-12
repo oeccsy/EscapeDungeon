@@ -20,11 +20,24 @@
 
 DungeonLevel::DungeonLevel() : commandHandler(*this)
 {
-	ReadDungeonFile("Map_2.txt");
+	ReadDungeonFile("Map_1.txt");
 	BindActorID();
 
 	uiSystem.InitLogArea();
 	
+	Logs::Get().AddLog({ "==== 게임 시작 ====" });
+}
+
+DungeonLevel::DungeonLevel(int index) : commandHandler(*this)
+{
+	char fileName[20];
+	sprintf_s(fileName, sizeof(fileName), "Map_%d.txt", index);
+	
+	ReadDungeonFile(fileName);
+	BindActorID();
+
+	uiSystem.InitLogArea();
+
 	Logs::Get().AddLog({ "==== 게임 시작 ====" });
 }
 

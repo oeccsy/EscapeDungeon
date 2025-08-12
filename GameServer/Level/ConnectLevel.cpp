@@ -96,14 +96,17 @@ void ConnectLevel::GameStart()
 {
 	if (playerCount < MAX_PLAYER_COUNT) return;
 	
+	int index = Utils::Random(1, 10);
+
 	Server& server = Server::Get();
 	
 	Command command;
 	command.dest = INVALID_SOCKET;
 	command.data[0] = static_cast<char>(CommandType::GameStart);
+	command.data[1] = index;
 
 	server.writeQueue.push(command);
 	
 	Player::playerCount = playerCount - 1;
-	Game::Get().LoadDungeonLevel();
+	Game::Get().LoadDungeonLevel(index);
 }
