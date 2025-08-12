@@ -235,6 +235,15 @@ void DungeonLevel::UpdateActorPositionByID(int id, const Vector2& pos)
 	idToActor[id]->SetPosition(pos);
 }
 
+void DungeonLevel::UpdateActorStaminaByID(int id, int stamina)
+{
+	if (idToActor.find(id) == idToActor.end()) return;
+	Actor* actor = idToActor[id];
+	
+	if (actor->As<Player>()) actor->As<Player>()->SetStamina(stamina);
+	if (actor->As<Monster>()) actor->As<Monster>()->SetStamina(stamina);
+}
+
 void DungeonLevel::KillPlayer(int id)
 {
 	if (idToActor.find(id) == idToActor.end()) return;

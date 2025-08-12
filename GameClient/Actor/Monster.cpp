@@ -90,6 +90,11 @@ int Monster::GetStamina()
 	return stamina;
 }
 
+void Monster::SetStamina(int stamina)
+{
+	this->stamina = stamina;
+}
+
 void Monster::SetOwner(bool isOwner)
 {
 	this->isOwner = isOwner;

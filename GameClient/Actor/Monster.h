@@ -15,7 +15,9 @@ public:
 
 	void Move();
 	void Kill(Actor* actor);
+	
 	int GetStamina();
+	void SetStamina(int stamina);
 
 	void SetOwner(bool isOwner);
 

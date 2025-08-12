@@ -85,20 +85,46 @@ void DungeonLevel::Tick(float deltaTime)
 
 	gameOverSystem.CheckGameOver();
 
-	for (auto actor : actors)
+	for(auto player : players)
 	{
-		if (actor->GetActorID() > 0)
-		{
-			Vector2 pos = actor->GetPosition();
-			
-			Command packet = { };
-			packet.data[0] = static_cast<char>(CommandType::Position);
-			packet.data[1] = actor->GetActorID();
-			packet.data[2] = pos.x;
-			packet.data[3] = pos.y;
+		if (player->GetActorID() <= 0) continue;
 
-			server.writeQueue.push(packet);
-		}
+		Vector2 pos = player->GetPosition();
+
+		Command posCommand;
+		posCommand.data[0] = static_cast<char>(CommandType::Position);
+		posCommand.data[1] = player->GetActorID();
+		posCommand.data[2] = pos.x;
+		posCommand.data[3] = pos.y;
+
+		server.writeQueue.push(posCommand);
+
+		Command staminaCommand;
+		staminaCommand.data[0] = static_cast<char>(CommandType::Stamina);
+		staminaCommand.data[1] = player->GetActorID();
+		staminaCommand.data[2] = player->GetStamina();
+
+		server.writeQueue.push(staminaCommand);
+	}
+
+	if (monster && monster->GetActorID() > 0)
+	{
+		Vector2 pos = monster->GetPosition();
+
+		Command posCommand;
+		posCommand.data[0] = static_cast<char>(CommandType::Position);
+		posCommand.data[1] = monster->GetActorID();
+		posCommand.data[2] = pos.x;
+		posCommand.data[3] = pos.y;
+
+		server.writeQueue.push(posCommand);
+
+		Command staminaCommand;
+		staminaCommand.data[0] = static_cast<char>(CommandType::Stamina);
+		staminaCommand.data[1] = monster->GetActorID();
+		staminaCommand.data[2] = monster->GetStamina();
+
+		server.writeQueue.push(staminaCommand);
 	}
 
 	while (!server.writeQueue.empty())

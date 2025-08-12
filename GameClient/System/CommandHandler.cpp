@@ -37,6 +37,9 @@ void CommandHandler::Execute(Command command)
 	case CommandType::Position:
 		if (dungeonLevel) dungeonLevel->UpdateActorPositionByID(command.data[1], { command.data[2], command.data[3] });
 		break;
+	case CommandType::Stamina:
+		if (dungeonLevel) dungeonLevel->UpdateActorStaminaByID(command.data[1], command.data[2]);
+		break;
 	case CommandType::Up:
 		break;
 	case CommandType::Down:

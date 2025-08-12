@@ -29,6 +29,7 @@ public:
 
 	void SetID(int id);
 	void UpdateActorPositionByID(int id, const Vector2& pos);
+	void UpdateActorStaminaByID(int id, int stamina);
 	void KillPlayer(int id);
 	void EscapePlayer(int id);
 

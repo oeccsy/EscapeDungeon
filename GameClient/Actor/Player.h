@@ -19,6 +19,7 @@ public:
 	void Die();
 
 	int GetStamina();
+	void SetStamina(int stamina);
 
 	void SetOwner(bool isOwner);
 

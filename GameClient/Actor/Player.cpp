@@ -100,6 +100,11 @@ int Player::GetStamina()
 	return stamina;
 }
 
+void Player::SetStamina(int stamina)
+{
+	this->stamina = stamina;
+}
+
 void Player::SetOwner(bool isOwner)
 {
 	this->isOwner = isOwner;

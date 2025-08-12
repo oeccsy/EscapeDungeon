@@ -7,7 +7,7 @@ enum class CommandType : char
 {
 	Connect = 1,
 	Disconnect = 2,
-	
+
 	NewPlayer = 3,
 	Ready = 4,
 	GameStart = 5,
@@ -15,10 +15,12 @@ enum class CommandType : char
 	ID = 6,
 
 	Position = 7,
-	Up = 8,
-	Down = 9,
-	Left = 10,
-	Right = 11
+	Stamina = 8,
+
+	Up = 9,
+	Down = 10,
+	Left = 11,
+	Right = 12
 };
 
 class CommandHandler
