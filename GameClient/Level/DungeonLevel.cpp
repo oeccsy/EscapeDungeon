@@ -57,6 +57,7 @@ void DungeonLevel::Tick(float deltaTime)
 	std::vector<Task*> tasks;
 	std::vector<Player*> players;
 	std::vector<Exit*> exits;
+	Monster* monster = nullptr;
 
 	for (Actor* const actor : actors)
 	{
@@ -82,10 +83,10 @@ void DungeonLevel::Tick(float deltaTime)
 		}
 	}
 
-	//interactionSystem.ProgressTask(tasks, players, deltaTime);
-	//interactionSystem.CheckOpenExit(*this, 1);
-	//interactionSystem.EscapePlayer(exits, players);
-	//interactionSystem.KillPlayer(monster, players);
+	interactionSystem.ProgressTask(tasks, players, deltaTime);
+	interactionSystem.CheckOpenExit(*this, 1);
+	interactionSystem.EscapePlayer(exits, players);
+	interactionSystem.KillPlayer(monster, players);
 
 	gameOverSystem.CheckGameOver();
 
@@ -103,7 +104,7 @@ void DungeonLevel::Render()
 	super::Render();
 
 	if (idToActor.find(ownID) == idToActor.end()) return;
-	
+
 	Player* player = nullptr;
 	Monster* monster = nullptr;
 
@@ -116,10 +117,7 @@ void DungeonLevel::Render()
 
 bool DungeonLevel::Movable(const Vector2& targetPos)
 {
-	char targetPosActor = dungeon[targetPos.y][targetPos.x];
-	if (targetPosActor == '#' || targetPosActor == 'T' || targetPosActor == 'E') return true;
-
-	return false;
+	return dungeon[targetPos.y][targetPos.x] == '#';
 }
 
 void DungeonLevel::ReadDungeonFile(const char* fileName)
@@ -164,18 +162,22 @@ void DungeonLevel::ReadDungeonFile(const char* fileName)
 			case 'P':
 				AddActor(new Road({ j, i }));
 				AddActor(new Player({ j, i }, this));
+				dungeon[i][j] = '#';
 				break;
 			case 'M':
 				AddActor(new Road({ j, i }));
 				AddActor(new Monster({ j, i }, this));
+				dungeon[i][j] = '#';
 				break;
 			case 'T':
 				AddActor(new Road({ j, i }));
 				AddActor(new Task({ j, i }));
+				dungeon[i][j] = '#';
 				break;
 			case 'E':
 				AddActor(new Road({ j, i }));
 				AddActor(new Exit({ j, i }));
+				dungeon[i][j] = '#';
 				break;
 			}
 		}

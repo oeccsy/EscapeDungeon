@@ -264,18 +264,22 @@ void DungeonLevel::ReadDungeonFile(const char* fileName)
 			case 'P':
 				AddActor(new Road({ j, i }));
 				AddActor(new Player({ j, i }, this));
+				dungeon[i][j] = '#';
 				break;
 			case 'M':
 				AddActor(new Road({ j, i }));
 				AddActor(new Monster({ j, i }, this));
+				dungeon[i][j] = '#';
 				break;
 			case 'T':
 				AddActor(new Road({ j, i }));
 				AddActor(new Task({ j, i }));
+				dungeon[i][j] = '#';
 				break;
 			case 'E':
 				AddActor(new Road({ j, i }));
 				AddActor(new Exit({ j, i }));
+				dungeon[i][j] = '#';
 				break;
 			}
 		}
