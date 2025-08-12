@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Level/Level.h"
 #include <vector>
@@ -18,7 +18,4 @@ public:
 	void CheckOpenExit(Level& level, int count);
 	void EscapePlayer(std::vector<Exit*>& exits, std::vector<Player*>& players);
 	void KillPlayer(Monster* monster, std::vector<Player*>& players);
-
-private:
-	bool isExitExist = false;
 };

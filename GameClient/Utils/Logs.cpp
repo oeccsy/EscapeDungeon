@@ -1,4 +1,4 @@
-#include "Logs.h"
+﻿#include "Logs.h"
 #include "Utils/Utils.h"
 
 #include <iostream>
@@ -67,7 +67,7 @@ void Logs::Render()
 
 		Log log = logs[logs.size() - i];
 		Utils::SetConsolePosition(Vector2(92, 38 - i));
-		std::cout << "                    ";
+		std::cout << "                                    ";
 		Utils::SetConsolePosition(Vector2(92, 38 - i));
 		std::cout << log.data;
 	}

@@ -4,6 +4,7 @@
 #include "Collider/BoxCollider.h"
 
 #include "Utils/Utils.h"
+#include "Utils/Logs.h"
 #include <iostream>
 
 
@@ -21,13 +22,24 @@ void Task::ProgressTask(float deltaTime)
 	if (curTaskTime >= REQUIRED_TASK_TIME) return;
 
 	curTaskTime += deltaTime;
-	if (curTaskTime >= REQUIRED_TASK_TIME) TaskDone();
-	
-	char buffer[30];
-	sprintf_s(buffer, sizeof(buffer), "Task 수행중 ... : %f", curTaskTime);
-	Utils::SetConsolePosition(Vector2(90, 5));
-	Utils::SetConsoleTextColor(Color::White);
-	std::cout << buffer;
+	if (curTaskTime >= REQUIRED_TASK_TIME)
+	{
+		TaskDone();
+
+		char buffer[30];
+		sprintf_s(buffer, sizeof(buffer), "Task 완료! : %f", curTaskTime);
+		Utils::SetConsolePosition(Vector2(90, 5));
+		Utils::SetConsoleTextColor(Color::White);
+		std::cout << buffer;
+	}
+	else
+	{
+		char buffer[30];
+		sprintf_s(buffer, sizeof(buffer), "Task 수행중 ... : %f", curTaskTime);
+		Utils::SetConsolePosition(Vector2(90, 5));
+		Utils::SetConsoleTextColor(Color::White);
+		std::cout << buffer;
+	}
 }
 
 void Task::TaskDone()
@@ -39,9 +51,5 @@ void Task::TaskDone()
 
 	++completedTaskCount;
 
-	char buffer[30];
-	sprintf_s(buffer, sizeof(buffer), "Task 완료! : %f", curTaskTime);
-	Utils::SetConsolePosition(Vector2(90, 5));
-	Utils::SetConsoleTextColor(Color::White);
-	std::cout << buffer;
+	Logs::Get().AddLog({ "누군가 Task를 완료했다." });
 }

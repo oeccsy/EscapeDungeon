@@ -5,6 +5,8 @@
 #include "Actor/Exit.h"
 #include "Actor/Monster.h"
 
+#include "Utils/Logs.h"
+
 #include "Networking/Command.h"
 #include "Networking/Server.h"
 
@@ -27,9 +29,10 @@ void InteractionSystem::ProgressTask(std::vector<Task*>& tasks, std::vector<Play
 void InteractionSystem::CheckOpenExit(Level& level, int count)
 {
 	if (Task::completedTaskCount < Task::REQUIRED_TASK_COUNT) return;
-	if (isExitExist) return;
-	
-	isExitExist = true;
+	if (Exit::isExitOpen) return;
+
+	Exit::isExitOpen = true;
+	Logs::Get().AddLog({ "탈출구가 열렸습니다!" });
 }
 
 void InteractionSystem::EscapePlayer(std::vector<Exit*>& exits, std::vector<Player*>& players)
@@ -42,7 +45,7 @@ void InteractionSystem::EscapePlayer(std::vector<Exit*>& exits, std::vector<Play
 			{
 				player->Escape();
 
-				Command packet = { };
+				Command packet;
 				packet.data[0] = 'e';
 				packet.data[1] = player->GetActorID();
 
@@ -62,7 +65,7 @@ void InteractionSystem::KillPlayer(Monster* monster, std::vector<Player*>& playe
 		{
 			monster->Kill(player);
 
-			Command packet = { };
+			Command packet;
 			packet.data[0] = 'k';
 			packet.data[1] = player->GetActorID();
 

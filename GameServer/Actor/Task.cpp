@@ -1,9 +1,10 @@
-#include "Task.h"
+﻿#include "Task.h"
 
 #include "Math/Vector2.h"
 #include "Collider/BoxCollider.h"
 
 #include "Utils/Utils.h"
+#include "Utils/Logs.h"
 #include <iostream>
 
 
@@ -21,14 +22,24 @@ void Task::ProgressTask(float deltaTime)
 	if (curTaskTime >= REQUIRED_TASK_TIME) return;
 
 	curTaskTime += deltaTime;
-	if (curTaskTime >= REQUIRED_TASK_TIME) TaskDone();
+	if (curTaskTime >= REQUIRED_TASK_TIME)
+	{
+		TaskDone();
 
-	char buffer[20] = { };
-	sprintf_s(buffer, sizeof(buffer), "%f", curTaskTime);
-
-	Utils::SetConsolePosition(Vector2(100, 5));
-	Utils::SetConsoleTextColor(Color::White);
-	std::cout << buffer;
+		//char buffer[30];
+		//sprintf_s(buffer, sizeof(buffer), "Task 완료! : %f", curTaskTime);
+		//Utils::SetConsolePosition(Vector2(90, 5));
+		//Utils::SetConsoleTextColor(Color::White);
+		//std::cout << buffer;
+	}
+	else
+	{
+		//char buffer[30];
+		//sprintf_s(buffer, sizeof(buffer), "Task 수행중 ... : %f", curTaskTime);
+		//Utils::SetConsolePosition(Vector2(90, 5));
+		//Utils::SetConsoleTextColor(Color::White);
+		//std::cout << buffer;
+	}
 }
 
 void Task::TaskDone()
@@ -39,4 +50,6 @@ void Task::TaskDone()
 	strcpy_s(image, 2, "D");
 
 	++completedTaskCount;
+
+	Logs::Get().AddLog({ "누군가 Task를 완료했다." });
 }

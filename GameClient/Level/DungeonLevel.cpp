@@ -23,9 +23,9 @@ DungeonLevel::DungeonLevel() : commandHandler(*this)
 	ReadDungeonFile("Map_2.txt");
 	BindActorID();
 	
-	Logs::Get().AddLog({ "==== 게임 시작 ====" });
-
 	uiSystem.InitLogArea();
+	
+	Logs::Get().AddLog({ "==== 게임 시작 ====" });
 }
 
 DungeonLevel::~DungeonLevel() {}
