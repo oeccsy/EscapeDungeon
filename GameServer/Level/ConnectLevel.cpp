@@ -64,9 +64,7 @@ void ConnectLevel::Render()
 {
 	super::Render();
 
-	Utils::SetConsoleTextColor(Color::White);
-	Utils::SetConsolePosition(Vector2(20, 15));
-	std::cout << "플레이어 수 : " << playerCount;
+	uiSystem.RenderPlayerCount(playerCount);
 }
 
 void ConnectLevel::Connect()

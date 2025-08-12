@@ -22,6 +22,13 @@ void UISystem::InitLogArea()
 	std::cout << "■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■\n";
 }
 
+void UISystem::RenderPlayerCount(int playerCount)
+{
+	Utils::SetConsoleTextColor(Color::White);
+	Utils::SetConsolePosition(Vector2(10, 30));
+	std::cout << "플레이어 수 : " << playerCount;
+}
+
 void UISystem::RenderStaminaUI(std::vector<Player*> players, Monster* monster)
 {
 	Utils::SetConsoleTextColor(Color::White);

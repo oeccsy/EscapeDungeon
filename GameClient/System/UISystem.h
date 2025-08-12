@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Actor/Player.h"
 #include "Actor/Monster.h"
@@ -12,6 +12,8 @@ public:
 	~UISystem() = default;
 
 	void InitLogArea();
+	void InitDesc();
+	void RenderPlayerCount(int playerCount);
 	void RenderStaminaUI(Player* players);
 	void RenderStaminaUI(Monster* monster);
 };
