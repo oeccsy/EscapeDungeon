@@ -18,6 +18,12 @@ public:
 	virtual void Tick(float deltaTime) override;
 	virtual void Render() override;
 
+	void Connect();
+	void Disconnect();
+
+	void Ready();
+	void GameStart();
+
 public:
 	static const int MAX_PLAYER_COUNT = 4;
 	int playerCount = 0;

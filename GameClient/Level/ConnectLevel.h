@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Level/Level.h"
 #include "System/UISystem.h"
@@ -18,11 +18,15 @@ public:
 	virtual void Tick(float deltaTime) override;
 	virtual void Render() override;
 
+	void NewPlayerJoined(int playerCount);
+	void GameStart();
+
 private:
 	void RecvData();
 
 	void RequestConnect();
-	void RequestStart();
+	void RequestReady();
+	void RequestGameStart();
 
 private:
 	int playerCount = 0;

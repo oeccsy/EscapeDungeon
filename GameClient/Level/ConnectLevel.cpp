@@ -8,7 +8,7 @@
 
 #include <iostream>
 
-ConnectLevel::ConnectLevel()
+ConnectLevel::ConnectLevel() : commandHandler(*this)
 {
 	Client& client = Client::Get();
 	client.InitSocket();
@@ -17,7 +17,6 @@ ConnectLevel::ConnectLevel()
 	FD_SET(client.clientSocket, &client.readSet);
 
 	uiSystem.InitLogArea();
-	commandHandler = CommandHandler(*this);
 }
 
 ConnectLevel::~ConnectLevel() { }
@@ -32,23 +31,22 @@ void ConnectLevel::Tick(float deltaTime)
 
 	while (!client.readQueue.empty())
 	{
-		Command packet = client.readQueue.front();
+		Command command = client.readQueue.front();
 		client.readQueue.pop();
 
-		switch (packet.data[0])
-		{
-		case 'n':
-			Logs::Get().AddLog({ "새로운 플레이어가 접속하였습니다." });
-			playerCount = packet.data[1];
-			break;
-		case 'd':
-			Game::Get().LoadDungeonLevel();
-			return;
-		}
+		commandHandler.Execute(command);
 	}
 
 	RequestConnect();
-	if (Input::Get().GetKeyDown(VK_RETURN)) RequestStart();
+	if (Input::Get().GetKeyDown(VK_RETURN)) RequestGameStart();
+
+	while(!client.writeQueue.empty())
+	{
+		Command command = client.writeQueue.front();
+		client.writeQueue.pop();
+		
+		client.Send(command.data, sizeof(command.data));
+	}
 }
 
 void ConnectLevel::Render()
@@ -66,19 +64,29 @@ void ConnectLevel::RecvData()
 
 	while (true)
 	{
-		Command packet = { };
+		Command command;
 
-		bool success = client.Recv(packet.data, 100);
+		bool success = client.Recv(command.data, sizeof(command.data));
 		if (success == false) break;
 		
-		client.readQueue.push(packet);
+		client.readQueue.push(command);
 	}
+}
+
+void ConnectLevel::NewPlayerJoined(int playerCount)
+{
+	this->playerCount = playerCount;
+	Logs::Get().AddLog({ "새로운 플레이어가 접속했습니다." });
+}
+
+void ConnectLevel::GameStart()
+{
+	Game::Get().LoadDungeonLevel();
 }
 
 void ConnectLevel::RequestConnect()
 {
 	Client& client = Client::Get();
-
 	if (client.isConnected) return;
 
 	bool success = client.Connect();
@@ -87,12 +95,24 @@ void ConnectLevel::RequestConnect()
 	Logs::Get().AddLog({ "게임 서버에 접속했습니다." });
 }
 
-void ConnectLevel::RequestStart()
+void ConnectLevel::RequestReady()
 {
 	Client& client = Client::Get();
-
 	if (!client.isConnected) return;
 
-	char buffer[100] = "s";
-	client.Send(buffer, sizeof(buffer));
+	Command command;
+	command.data[0] = static_cast<char>(CommandType::Ready);
+
+	client.writeQueue.push(command);
+}
+
+void ConnectLevel::RequestGameStart()
+{
+	Client& client = Client::Get();
+	if (!client.isConnected) return;
+
+	Command command;
+	command.data[0] = static_cast<char>(CommandType::GameStart);
+	
+	client.writeQueue.push(command);
 }

@@ -118,6 +118,12 @@ bool Server::Accept()
 	FD_SET(clientSocket, &readSet);
 	clientSockets.push_back(clientSocket);
 
+	Command command;
+	command.src = clientSocket;
+	command.data[0] = 1;
+	
+	readQueue.push(command);
+
 	return true;
 }
 

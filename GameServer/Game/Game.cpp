@@ -15,10 +15,6 @@ void Game::LoadDungeonLevel()
 {
 	system("cls");
 	engine.AddLevel(new DungeonLevel());
-	
-	// TODO : 코드 정돈
-	char buffer[100] = { 'd', '\0'};
-	server.SendAll(buffer, 100);
 }
 
 void Game::Run()

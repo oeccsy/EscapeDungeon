@@ -1,4 +1,4 @@
-#include "CommandHandler.h"
+﻿#include "CommandHandler.h"
 #include "Level/ConnectLevel.h"
 #include "Level/DungeonLevel.h"
 #include "Utils/Logs.h"
@@ -12,80 +12,41 @@ CommandHandler::CommandHandler(Level& level)
 
 void CommandHandler::Execute(Command command)
 {
+	ConnectLevel* connectLevel = level->As<ConnectLevel>();
+
 	switch (static_cast<CommandType>(command.data[0]))
 	{
 	case CommandType::Connect:
-		Connect(command);
+		if (connectLevel) connectLevel->Connect();
 		break;
 	case CommandType::Disconnect:
-		Disconnect(command);
+		if (connectLevel) connectLevel->Disconnect();
+		break;
+	case CommandType::NewPlayer:
 		break;
 	case CommandType::Ready:
-		Ready(command);
+		if (connectLevel) connectLevel->Ready();
 		break;
-	case CommandType::StartGame:
-		StartGame(command);
+	case CommandType::GameStart:
+		if (connectLevel) connectLevel->GameStart();
+		break;
+	case CommandType::ID:
+		break;
+	case CommandType::Position:
 		break;
 	case CommandType::Up:
-		Up(command);
+
 		break;
 	case CommandType::Down:
-		Down(command);
+
 		break;
 	case CommandType::Left:
-		Left(command);
+
 		break;
 	case CommandType::Right:
-		Right(command);
+
 		break;
 	default:
 		break;
 	}
-}
-
-void CommandHandler::Connect(Command command)
-{
-	ConnectLevel* connectLevel = level->As<ConnectLevel>();
-	if (!connectLevel) return;
-
-	connectLevel->playerCount++;
-	Logs::Get().AddLog({ "새로운 플레이어가 접속했습니다." });
-
-	Server& server = Server::Get();
-
-	Command command;
-	command.dest = INVALID_SOCKET;
-	command.data[0] = CommandType::NewPlayer;
-	command.data[1] = connectLevel->playerCount;
-
-	server.writeQueue.push(command);
-}
-
-void CommandHandler::Disconnect(Command command)
-{
-	Logs::Get().AddLog({ "어떤 플레이어의 접속이 끊겼습니다." });
-}
-
-void CommandHandler::Ready(Command command)
-{
-}
-
-void CommandHandler::StartGame(Command command)
-{
-}
-
-void CommandHandler::Up(Command command)
-{
-}
-
-void CommandHandler::Down(Command command)
-{
-}
-
-void CommandHandler::Left(Command command)
-{
-}
-
-void CommandHandler::Right(Command command)
-{
 }
