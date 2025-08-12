@@ -220,6 +220,22 @@ void Server::Recv()
 	}
 }
 
+void Server::ClearReadQueue()
+{
+	while (!readQueue.empty())
+	{
+		readQueue.pop();
+	}
+}
+
+void Server::ClearWriteQueue()
+{
+	while (!writeQueue.empty())
+	{
+		writeQueue.pop();
+	}
+}
+
 void Server::Close()
 {
 	::closesocket(listenSocket);

@@ -18,7 +18,7 @@
 #include <iostream>
 #include <vector>
 
-DungeonLevel::DungeonLevel()
+DungeonLevel::DungeonLevel() : commandHandler(*this)
 {
 	ReadDungeonFile("Map_2.txt");
 	BindActorID();
@@ -41,34 +41,10 @@ void DungeonLevel::Tick(float deltaTime)
 
 	while (!server.readQueue.empty())
 	{
-		Command packet = server.readQueue.front();
+		Command command = server.readQueue.front();
 		server.readQueue.pop();
-
-		SOCKET client = packet.src;
-		Actor* actor = clientToActor[client];
-		if (actor == nullptr) continue;
-
-		Command sendPacket = { };
-
-		switch (packet.data[0])
-		{
-		case 'u':
-			if (actor->As<Player>()) actor->As<Player>()->Move({ 0, -1 });
-			if (actor->As<Monster>()) actor->As<Monster>()->Move({ 0, -1 });
-			break;
-		case 'd':
-			if (actor->As<Player>()) actor->As<Player>()->Move({ 0, 1 });
-			if (actor->As<Monster>()) actor->As<Monster>()->Move({ 0, 1 });
-			break;
-		case 'r':
-			if (actor->As<Player>()) actor->As<Player>()->Move({ 1, 0 });
-			if (actor->As<Monster>()) actor->As<Monster>()->Move({ 1, 0 });
-			break;
-		case 'l':
-			if (actor->As<Player>()) actor->As<Player>()->Move({ -1, 0 });
-			if (actor->As<Monster>()) actor->As<Monster>()->Move({ -1, 0 });
-			break;
-		}
+		
+		commandHandler.Execute(command);
 	}
 
 	std::vector<Task*> tasks;
@@ -116,7 +92,7 @@ void DungeonLevel::Tick(float deltaTime)
 			Vector2 pos = actor->GetPosition();
 			
 			Command packet = { };
-			packet.data[0] = 'p';
+			packet.data[0] = static_cast<char>(CommandType::Position);
 			packet.data[1] = actor->GetActorID();
 			packet.data[2] = pos.x;
 			packet.data[3] = pos.y;
@@ -166,6 +142,58 @@ void DungeonLevel::Render()
 bool DungeonLevel::Movable(const Vector2& targetPos)
 {
 	return dungeon[targetPos.y][targetPos.x] == '#';
+}
+
+Actor* DungeonLevel::GetActorByClient(SOCKET socket)
+{
+	if (clientToActor.find(socket) != clientToActor.end())
+	{
+		return clientToActor[socket];
+	}
+	else
+	{
+		return nullptr;
+	}
+}
+
+Actor* DungeonLevel::GetActorByID(int id)
+{
+	if(idToActor.find(id) != idToActor.end())
+	{
+		return idToActor[id];
+	}
+	else
+	{
+		return nullptr;
+	}
+}
+
+void DungeonLevel::MoveUp(Actor* actor)
+{
+	if (actor == nullptr) return;
+	if (actor->As<Player>()) actor->As<Player>()->Move({ 0, -1 });
+	if (actor->As<Monster>()) actor->As<Monster>()->Move({ 0, -1 });
+}
+
+void DungeonLevel::MoveDown(Actor* actor)
+{
+	if (actor == nullptr) return;
+	if (actor->As<Player>()) actor->As<Player>()->Move({ 0, 1 });
+	if (actor->As<Monster>()) actor->As<Monster>()->Move({ 0, 1 });
+}
+
+void DungeonLevel::MoveLeft(Actor* actor)
+{
+	if (actor == nullptr) return;
+	if (actor->As<Player>()) actor->As<Player>()->Move({ -1, 0 });
+	if (actor->As<Monster>()) actor->As<Monster>()->Move({ -1, 0 });
+}
+
+void DungeonLevel::MoveRight(Actor* actor)
+{
+	if (actor == nullptr) return;
+	if (actor->As<Player>()) actor->As<Player>()->Move({ 1, 0 });
+	if (actor->As<Monster>()) actor->As<Monster>()->Move({ 1, 0 });
 }
 
 void DungeonLevel::ReadDungeonFile(const char* fileName)
@@ -245,12 +273,12 @@ void DungeonLevel::BindActorID()
 			idToActor.insert({ id, actor });
 			clientToActor.insert({ *it, actor });
 
-			Command packet = { };
-			packet.dest = *it;
-			packet.data[0] = 'i';
-			packet.data[1] = id;
+			Command command;
+			command.dest = *it;
+			command.data[0] = static_cast<char>(CommandType::ID);
+			command.data[1] = id;
 
-			Server::Get().writeQueue.push(packet);
+			Server::Get().writeQueue.push(command);
 
 			++id;
 			++it;
@@ -264,12 +292,12 @@ void DungeonLevel::BindActorID()
 			idToActor.insert({ id, actor });
 			clientToActor.insert({ *it, actor });
 
-			Command packet = { };
-			packet.dest = *it;
-			packet.data[0] = 'i';
-			packet.data[1] = id;
+			Command command = { };
+			command.dest = *it;
+			command.data[0] = static_cast<char>(CommandType::ID);
+			command.data[1] = id;
 
-			Server::Get().writeQueue.push(packet);
+			Server::Get().writeQueue.push(command);
 
 			++id;
 			++it;

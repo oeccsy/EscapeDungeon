@@ -12,7 +12,10 @@ CommandHandler::CommandHandler(Level& level)
 
 void CommandHandler::Execute(Command command)
 {
+	if (level == nullptr) return;
+
 	ConnectLevel* connectLevel = level->As<ConnectLevel>();
+	DungeonLevel* dungeonLevel = level->As<DungeonLevel>();
 
 	switch (static_cast<CommandType>(command.data[0]))
 	{
@@ -29,20 +32,18 @@ void CommandHandler::Execute(Command command)
 		if (connectLevel) connectLevel->GameStart();
 		break;
 	case CommandType::ID:
+		if (dungeonLevel) dungeonLevel->SetID(command.data[1]);
 		break;
 	case CommandType::Position:
+		if (dungeonLevel) dungeonLevel->UpdateActorPositionByID(command.data[1], { command.data[2], command.data[3] });
 		break;
 	case CommandType::Up:
-
 		break;
 	case CommandType::Down:
-
 		break;
 	case CommandType::Left:
-
 		break;
 	case CommandType::Right:
-
 		break;
 	default:
 		break;

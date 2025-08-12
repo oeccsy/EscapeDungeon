@@ -18,7 +18,7 @@
 #include <iostream>
 #include <vector>
 
-DungeonLevel::DungeonLevel()
+DungeonLevel::DungeonLevel() : commandHandler(*this)
 {
 	ReadDungeonFile("Map_2.txt");
 	BindActorID();
@@ -38,73 +38,20 @@ void DungeonLevel::Tick(float deltaTime)
 
 	while (true)
 	{
-		Command packet = { };
+		Command command;
 
-		bool success = client.Recv(packet.data, sizeof(packet.data));
+		bool success = client.Recv(command.data, sizeof(command.data));
 		if (success == false) break;
 
-		client.readQueue.push(packet);
+		client.readQueue.push(command);
 	}
 
 	while (!client.readQueue.empty())
 	{
-		Command packet = client.readQueue.front();
+		Command command = client.readQueue.front();
 		client.readQueue.pop();
 
-		Actor* actor = nullptr;
-		int actorID = -1;
-		int posX = -1;
-		int posY = -1;
-
-		Player* player = nullptr;
-
-		char logData[100];
-
-		switch (packet.data[0])
-		{
-		case 'i':
-			ownID = packet.data[1];
-
-			sprintf_s(logData, sizeof(logData), "ID를 부여받았습니다. : %d", ownID);
-			Logs::Get().AddLog({ logData });
-
-			actor = idToActor[ownID];
-
-			if (actor->As<Player>()) actor->As<Player>()->SetOwner(true);
-			if (actor->As<Monster>()) actor->As<Monster>()->SetOwner(true);
-			break;
-		case 'p':
-			actorID = packet.data[1];
-			posX = packet.data[2];
-			posY = packet.data[3];
-
-			if (idToActor.find(actorID) == idToActor.end()) break;
-
-			actor = idToActor.find(actorID)->second;
-			actor->SetPosition({ posX, posY });
-			break;
-		case 'k':
-			actorID = packet.data[1];
-
-			if (idToActor.find(actorID) == idToActor.end()) break;
-
-			player = idToActor.find(actorID)->second->As<Player>();
-			player->Die();
-
-			Logs::Get().AddLog({ "어떤 플레이어가 사망했습니다." });
-			break;
-		case 'e':
-			int actorID = packet.data[1];
-
-			if (idToActor.find(actorID) == idToActor.end()) break;
-
-			player = idToActor.find(actorID)->second->As<Player>();
-			player->Escape();
-
-			sprintf_s(logData, sizeof(logData), "%d 플레이어가 탈출에 성공했다!", actorID);
-			Logs::Get().AddLog({ logData });
-			break;
-		}
+		commandHandler.Execute(command);
 	}
 
 	std::vector<Task*> tasks;
@@ -269,4 +216,45 @@ void DungeonLevel::BindActorID()
 void DungeonLevel::SetID(int id)
 {
 	ownID = id;
+
+	char logData[100];
+	sprintf_s(logData, sizeof(logData), "ID를 부여받았습니다. : %d", ownID);
+	Logs::Get().AddLog({ logData });
+
+	if (idToActor.find(ownID) == idToActor.end()) return;
+	Actor* actor = idToActor[ownID];
+
+	if (actor->As<Player>()) actor->As<Player>()->SetOwner(true);
+	if (actor->As<Monster>()) actor->As<Monster>()->SetOwner(true);
+}
+
+void DungeonLevel::UpdateActorPositionByID(int id, const Vector2& pos)
+{
+	if (idToActor.find(id) == idToActor.end()) return;
+	
+	idToActor[id]->SetPosition(pos);
+}
+
+void DungeonLevel::KillPlayer(int id)
+{
+	if (idToActor.find(id) == idToActor.end()) return;
+
+	Player* player = idToActor[id]->As<Player>();
+	player->Die();
+
+	char logData[100];
+	sprintf_s(logData, sizeof(logData), "플레이어 %d 가 사망했습니다!", id);
+	Logs::Get().AddLog(logData);
+}
+
+void DungeonLevel::EscapePlayer(int id)
+{
+	if (idToActor.find(id) == idToActor.end()) return;
+
+	Player* player = idToActor[id]->As<Player>();
+	player->Escape();
+
+	char logData[100];
+	sprintf_s(logData, sizeof(logData), "플레이어 %d 가 탈출에 성공했다!", id);
+	Logs::Get().AddLog(logData);
 }

@@ -7,6 +7,7 @@
 #include "System/InteractionSystem.h"
 #include "System/GameOverSystem.h"
 #include "System/UISystem.h"
+#include "System/CommandHandler.h"
 
 #include <unordered_map>
 #include <vector>
@@ -28,6 +29,14 @@ public:
 
 	virtual bool Movable(const Vector2& targetPos);
 
+	Actor* GetActorByClient(SOCKET socket);
+	Actor* GetActorByID(int id);
+
+	void MoveUp(Actor* actor);
+	void MoveDown(Actor* actor);
+	void MoveLeft(Actor* actor);
+	void MoveRight(Actor* actor);
+
 private:
 	void ReadDungeonFile(const char* fileName);
 	void BindActorID();
@@ -41,4 +50,5 @@ private:
 	InteractionSystem interactionSystem;
 	GameOverSystem gameOverSystem;
 	UISystem uiSystem;
+	CommandHandler commandHandler;
 };

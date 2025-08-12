@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Actor/Actor.h"
 #include "Utils/Timer.h"
@@ -11,7 +11,6 @@ class Monster : public Actor
 public:
 	Monster(const Vector2& position, IMovable* movable);
 
-	virtual void BeginPlay() override;
 	virtual void Tick(float deltaTime) override;
 
 	void Move();

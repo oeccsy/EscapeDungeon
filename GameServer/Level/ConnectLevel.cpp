@@ -41,6 +41,7 @@ void ConnectLevel::Tick(float deltaTime)
 		server.readQueue.pop();
 
 		commandHandler.Execute(command);
+		if (command.data[0] == static_cast<char>(CommandType::GameStart)) return;
 	}
 
 	while (!server.writeQueue.empty())
@@ -98,11 +99,12 @@ void ConnectLevel::GameStart()
 	if (playerCount < MAX_PLAYER_COUNT) return;
 	
 	Server& server = Server::Get();
+	
 	Command command;
 	command.dest = INVALID_SOCKET;
 	command.data[0] = static_cast<char>(CommandType::GameStart);
 
-	server.SendAll(command.data, sizeof(command.data));
-
+	server.writeQueue.push(command);
+	
 	Game::Get().LoadDungeonLevel();
 }

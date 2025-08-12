@@ -85,11 +85,7 @@ void Engine::Run()
 
 void Engine::AddLevel(Level* newLevel)
 {
-	if (mainLevel)
-	{
-		delete mainLevel;
-	}
-	
+	SafeDelete(mainLevel);
 	mainLevel = newLevel;
 }
 

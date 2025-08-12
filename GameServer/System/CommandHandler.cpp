@@ -13,6 +13,7 @@ CommandHandler::CommandHandler(Level& level)
 void CommandHandler::Execute(Command command)
 {
 	ConnectLevel* connectLevel = level->As<ConnectLevel>();
+	DungeonLevel* dungeonLevel = level->As<DungeonLevel>();
 
 	switch (static_cast<CommandType>(command.data[0]))
 	{
@@ -35,16 +36,16 @@ void CommandHandler::Execute(Command command)
 	case CommandType::Position:
 		break;
 	case CommandType::Up:
-
+		if (dungeonLevel) dungeonLevel->MoveUp(dungeonLevel->GetActorByClient(command.src));
 		break;
 	case CommandType::Down:
-
+		if (dungeonLevel) dungeonLevel->MoveDown(dungeonLevel->GetActorByClient(command.src));
 		break;
 	case CommandType::Left:
-
+		if (dungeonLevel) dungeonLevel->MoveLeft(dungeonLevel->GetActorByClient(command.src));
 		break;
 	case CommandType::Right:
-
+		if (dungeonLevel) dungeonLevel->MoveRight(dungeonLevel->GetActorByClient(command.src));
 		break;
 	default:
 		break;

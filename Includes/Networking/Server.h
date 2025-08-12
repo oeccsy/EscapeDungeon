@@ -23,6 +23,9 @@ public:
 
 	void Close();
 
+	void ClearReadQueue();
+	void ClearWriteQueue();
+
 	static Server& Get();
 
 public:

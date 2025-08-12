@@ -35,6 +35,7 @@ void ConnectLevel::Tick(float deltaTime)
 		client.readQueue.pop();
 
 		commandHandler.Execute(command);
+		if (command.data[0] == static_cast<char>(CommandType::GameStart)) return;
 	}
 
 	RequestConnect();

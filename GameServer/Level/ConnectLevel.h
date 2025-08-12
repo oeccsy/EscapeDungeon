@@ -25,7 +25,7 @@ public:
 	void GameStart();
 
 public:
-	static const int MAX_PLAYER_COUNT = 4;
+	static const int MAX_PLAYER_COUNT = 2;
 	int playerCount = 0;
 
 private:

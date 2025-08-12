@@ -7,6 +7,7 @@
 #include "Actor/Player.h"
 #include "Networking/Client.h"
 #include "Networking/Command.h"
+#include "System/CommandHandler.h"
 
 Monster::Monster(const Vector2& position, IMovable* movable) : Actor("M", Color::Red, position), movableInterface(movable)
 {
@@ -19,11 +20,6 @@ Monster::Monster(const Vector2& position, IMovable* movable) : Actor("M", Color:
 	staminaTimer.Register(staminaEvent);
 
 	collider = new BoxCollider({ 0, 0 }, { 1, 1 }, this);
-}
-
-void Monster::BeginPlay()
-{
-	super::BeginPlay();
 }
 
 void Monster::Tick(float deltaTime)
@@ -47,69 +43,36 @@ void Monster::Move()
 
 	Client& client = Client::Get();
 
-
-	if (Input::Get().GetKeyDown(VK_RIGHT))
-	{
-		Command packet = { };
-		packet.data[0] = 'r';
-
-		client.writeQueue.push(packet);
-		//Vector2 targetPos = GetPosition() + Vector2(1, 0);
-		//bool movable = movableInterface->Movable(targetPos);
-
-		//if (movable)
-		//{
-		//	SetPosition(targetPos);
-		//	--stamina;
-		//}
-	}
-
-	if (Input::Get().GetKeyDown(VK_LEFT))
-	{
-		Command packet = { };
-		packet.data[0] = 'l';
-
-		client.writeQueue.push(packet);
-		//Vector2 targetPos = GetPosition() + Vector2(-1, 0);
-		//bool movable = movableInterface->Movable(targetPos);
-
-		//if (movable)
-		//{
-		//	SetPosition(targetPos);
-		//	--stamina;
-		//}
-	}
-
 	if (Input::Get().GetKeyDown(VK_UP))
 	{
-		Command packet = { };
-		packet.data[0] = 'u';
+		Command command;
+		command.data[0] = static_cast<char>(CommandType::Up);
 
-		client.writeQueue.push(packet);
-		//Vector2 targetPos = GetPosition() + Vector2(0, -1);
-		//bool movable = movableInterface->Movable(targetPos);
-
-		//if (movable)
-		//{
-		//	SetPosition(targetPos);
-		//	--stamina;
-		//}
+		client.writeQueue.push(command);
 	}
 
 	if (Input::Get().GetKeyDown(VK_DOWN))
 	{
-		Command packet = { };
-		packet.data[0] = 'd';
+		Command command;
+		command.data[0] = static_cast<char>(CommandType::Down);
 
-		client.writeQueue.push(packet);
-		//Vector2 targetPos = GetPosition() + Vector2(0, 1);
-		//bool movable = movableInterface->Movable(targetPos);
+		client.writeQueue.push(command);
+	}
+	
+	if (Input::Get().GetKeyDown(VK_LEFT))
+	{
+		Command command;
+		command.data[0] = static_cast<char>(CommandType::Left);
 
-		//if (movable)
-		//{
-		//	SetPosition(targetPos);
-		//	--stamina;
-		//}
+		client.writeQueue.push(command);
+	}
+
+	if (Input::Get().GetKeyDown(VK_RIGHT))
+	{
+		Command command;
+		command.data[0] = static_cast<char>(CommandType::Right);
+
+		client.writeQueue.push(command);
 	}
 }
 
@@ -134,8 +97,5 @@ void Monster::SetOwner(bool isOwner)
 
 void Monster::AddStamina()
 {
-	if (stamina < MAX_STAMINA)
-	{
-		++stamina;
-	}
+	if (stamina < MAX_STAMINA) ++stamina;
 }
