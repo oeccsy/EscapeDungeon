@@ -13,7 +13,7 @@ public:
 
 	void InitLogArea();
 	void InitDesc();
-	void RenderPlayerCount(int playerCount);
+	void RenderPlayerCount(int playerCount, int reqPlayerCount);
 	void RenderStaminaUI(Player* players);
 	void RenderStaminaUI(Monster* monster);
 };

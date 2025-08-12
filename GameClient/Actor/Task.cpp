@@ -7,7 +7,6 @@
 #include "Utils/Logs.h"
 #include <iostream>
 
-
 const float Task::REQUIRED_TASK_TIME = 5.0f;
 int Task::completedTaskCount = 0;
 
@@ -27,7 +26,7 @@ void Task::ProgressTask(float deltaTime)
 		TaskDone();
 
 		char buffer[30];
-		sprintf_s(buffer, sizeof(buffer), "Task 완료! : %f", curTaskTime);
+		sprintf_s(buffer, sizeof(buffer), "Task 완료!                ");
 		Utils::SetConsolePosition(Vector2(90, 5));
 		Utils::SetConsoleTextColor(Color::White);
 		std::cout << buffer;

@@ -30,28 +30,32 @@ void UISystem::InitDesc()
 
 	Utils::SetConsolePosition(Vector2(10, 11));
 	std::cout << "이동 : 방향키(위, 아래, 왼쪽, 오른쪽)" << '\n';
+	Utils::SetConsolePosition(Vector2(10, 12));
+	std::cout << "게임 시작 : Enter" << '\n';
 
 
-	Utils::SetConsolePosition(Vector2(10, 13));
-	std::cout << "[플레이어 목표] " << '\n';
 	Utils::SetConsolePosition(Vector2(10, 14));
-	std::cout << "잠금장치를 해제하기		* T : 잠금장치" << '\n';
+	std::cout << "[플레이어 목표] " << '\n';
 	Utils::SetConsolePosition(Vector2(10, 15));
-	std::cout << "탈출구로 탈출하기		* E : 탈출구" << '\n';
+	std::cout << "잠금장치를 해제하기		* T : 잠금장치" << '\n';
 	Utils::SetConsolePosition(Vector2(10, 16));
+	std::cout << "탈출구로 탈출하기		* E : 탈출구" << '\n';
+	Utils::SetConsolePosition(Vector2(10, 17));
 	std::cout << "몬스터 피하기			* M : 몬스터" << '\n';
 
-	Utils::SetConsolePosition(Vector2(10, 18));
-	std::cout << "[몬스터 목표] " << '\n';
 	Utils::SetConsolePosition(Vector2(10, 19));
+	std::cout << "[몬스터 목표] " << '\n';
+	Utils::SetConsolePosition(Vector2(10, 20));
 	std::cout << "플레이어 잡기			* P : 플레이어" << '\n';
 }
 
-void UISystem::RenderPlayerCount(int playerCount)
+void UISystem::RenderPlayerCount(int playerCount, int reqPlayerCount)
 {
 	Utils::SetConsoleTextColor(Color::White);
 	Utils::SetConsolePosition(Vector2(10, 30));
-	std::cout << "플레이어 수 : " << playerCount;
+	std::cout << "필요한 플레이어 수 : " << reqPlayerCount;
+	Utils::SetConsolePosition(Vector2(10, 32));
+	std::cout << "현재 플레이어 수 : " << playerCount;
 }
 
 void UISystem::RenderStaminaUI(Player* player)

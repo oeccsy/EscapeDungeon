@@ -28,6 +28,9 @@ private:
 	void RequestReady();
 	void RequestGameStart();
 
+public:
+	static const int MAX_PLAYER_COUNT = 2;
+
 private:
 	int playerCount = 0;
 

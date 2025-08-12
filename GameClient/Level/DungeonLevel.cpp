@@ -81,6 +81,8 @@ void DungeonLevel::Tick(float deltaTime)
 			exits.emplace_back(exit);
 			continue;
 		}
+
+		monster = actor->As<Monster>();
 	}
 
 	interactionSystem.ProgressTask(tasks, players, deltaTime);

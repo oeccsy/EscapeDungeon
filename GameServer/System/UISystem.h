@@ -12,6 +12,6 @@ public:
 	~UISystem() = default;
 
 	void InitLogArea();
-	void RenderPlayerCount(int playerCount);
+	void RenderPlayerCount(int playerCount, int reqPlayerCount);
 	void RenderStaminaUI(std::vector<Player*> players, Monster* monster);
 };

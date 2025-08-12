@@ -55,7 +55,7 @@ void ConnectLevel::Render()
 {
 	super::Render();
 
-	uiSystem.RenderPlayerCount(playerCount);
+	uiSystem.RenderPlayerCount(playerCount, ConnectLevel::MAX_PLAYER_COUNT);
 }
 
 void ConnectLevel::RecvData()

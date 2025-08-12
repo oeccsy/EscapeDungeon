@@ -22,11 +22,13 @@ void UISystem::InitLogArea()
 	std::cout << "■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■\n";
 }
 
-void UISystem::RenderPlayerCount(int playerCount)
+void UISystem::RenderPlayerCount(int playerCount, int reqPlayerCount)
 {
 	Utils::SetConsoleTextColor(Color::White);
 	Utils::SetConsolePosition(Vector2(10, 30));
-	std::cout << "플레이어 수 : " << playerCount;
+	std::cout << "필요한 플레이어 수 : " << reqPlayerCount;
+	Utils::SetConsolePosition(Vector2(10, 32));
+	std::cout << "현재 플레이어 수 : " << playerCount;
 }
 
 void UISystem::RenderStaminaUI(std::vector<Player*> players, Monster* monster)
