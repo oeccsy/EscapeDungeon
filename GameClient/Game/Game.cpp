@@ -2,6 +2,8 @@
 #include "Level/ConnectLevel.h"
 #include "Level/DungeonLevel.h"
 
+#include <iostream>
+
 Game* Game::instance = nullptr;
 
 Game::Game()
@@ -21,6 +23,8 @@ void Game::Run()
 {
 	engine.AddLevel(new ConnectLevel());
 	engine.Run();
+
+	std::cin.get();
 }
 
 Game& Game::Get()

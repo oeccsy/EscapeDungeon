@@ -1,20 +1,22 @@
-#include "GameOverSystem.h"
+﻿#include "GameOverSystem.h"
 #include "Actor/Player.h"
 #include "Utils/Utils.h"
+#include "Utils/Logs.h"
+
+#include "Engine.h"
 
 #include <iostream>
 
-GameOverSystem::GameOverSystem() : playerCount(1) {}
-GameOverSystem::GameOverSystem(int playerCount) : playerCount(playerCount) { }
+bool GameOverSystem::isGameOver = false;
 
 void GameOverSystem::CheckGameOver()
 {
-	if (playerCount == Player::escapeCount + Player::deadCount) GameOver();
+	if (Player::playerCount == Player::escapeCount + Player::deadCount) GameOver();
 }
 
 void GameOverSystem::GameOver()
 {
-	Utils::SetConsolePosition(Vector2(100, 30));
-	Utils::SetConsoleTextColor(Color::White);
-	std::cout << "Game Over!";
+	isGameOver = true;
+	Logs::Get().AddLog({ "==== 게임 종료 ====" });
+	Engine::Get().Quit();
 }

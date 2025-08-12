@@ -82,6 +82,7 @@ void ConnectLevel::NewPlayerJoined(int playerCount)
 
 void ConnectLevel::GameStart()
 {
+	Player::playerCount = playerCount - 1;
 	Game::Get().LoadDungeonLevel();
 }
 

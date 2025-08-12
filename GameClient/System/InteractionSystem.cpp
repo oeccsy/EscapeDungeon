@@ -40,7 +40,14 @@ void InteractionSystem::EscapePlayer(std::vector<Exit*>& exits, std::vector<Play
 	{
 		for (auto player : players)
 		{
-			if (exit->GetPosition() == player->GetPosition()) player->Escape();
+			if (exit->GetPosition() == player->GetPosition())
+			{
+				player->Escape();
+
+				char logData[100];
+				sprintf_s(logData, sizeof(logData), "플레이어 %d 가 탈출했습니다!", player->GetActorID());
+				Logs::Get().AddLog(logData);
+			}
 		}
 	}
 }
@@ -51,6 +58,13 @@ void InteractionSystem::KillPlayer(Monster* monster, std::vector<Player*>& playe
 	
 	for (auto player : players)
 	{
-		if (monster->Intersects(player->GetPosition())) monster->Kill(player);
+		if (monster->Intersects(player->GetPosition()))
+		{
+			monster->Kill(player);
+			
+			char logData[100];
+			sprintf_s(logData, sizeof(logData), "플레이어 %d 가 사망했습니다.", player->GetActorID());
+			Logs::Get().AddLog(logData);
+		}
 	}
 }

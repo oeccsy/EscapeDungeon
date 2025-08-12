@@ -1,9 +1,10 @@
-#include "Player.h"
+﻿#include "Player.h"
 #include "Input.h"
 #include "Interface/IMovable.h"
 
 #include "Collider/BoxCollider.h"
 
+int Player::playerCount = 0;
 int Player::escapeCount = 0;
 int Player::deadCount = 0;
 

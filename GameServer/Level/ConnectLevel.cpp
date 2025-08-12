@@ -106,5 +106,6 @@ void ConnectLevel::GameStart()
 
 	server.writeQueue.push(command);
 	
+	Player::playerCount = playerCount - 1;
 	Game::Get().LoadDungeonLevel();
 }

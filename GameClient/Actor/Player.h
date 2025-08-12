@@ -28,6 +28,7 @@ private:
 
 public:
 	static const int MAX_STAMINA = 10;
+	static int playerCount;
 	static int escapeCount;
 	static int deadCount;
 

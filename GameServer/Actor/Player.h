@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Actor/Actor.h"
 #include "Utils/Timer.h"
@@ -25,6 +25,7 @@ private:
 
 public:
 	static const int MAX_STAMINA = 10;
+	static int playerCount;
 	static int escapeCount;
 	static int deadCount;
 

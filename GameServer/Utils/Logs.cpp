@@ -15,6 +15,15 @@ void Logs::AddLog(Log log)
 	Render();
 }
 
+void Logs::AddLog(char data[100])
+{
+	Log log;
+	memcpy(log.data, data, sizeof(log.data));
+
+	logs.push_back(log);
+	Render();
+}
+
 void Logs::Export()
 {
 	FILE* file = nullptr;

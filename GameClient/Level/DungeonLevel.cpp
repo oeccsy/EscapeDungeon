@@ -108,8 +108,14 @@ void DungeonLevel::Render()
 	Player* player = nullptr;
 	Monster* monster = nullptr;
 
-	player = idToActor[ownID]->As<Player>();
-	monster = idToActor[ownID]->As<Monster>();
+	for (Actor* const actor : actors)
+	{
+		if (actor->GetActorID() == ownID)
+		{
+			if (actor->As<Player>()) player = actor->As<Player>();
+			if (actor->As<Monster>()) monster = actor->As<Monster>();
+		}
+	}
 
 	uiSystem.RenderStaminaUI(player);
 	uiSystem.RenderStaminaUI(monster);

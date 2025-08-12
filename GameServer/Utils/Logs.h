@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <vector>
 
@@ -14,6 +14,7 @@ public:
 	~Logs();
 
 	void AddLog(Log log);
+	void AddLog(char data[100]);
 	void Export();
 
 	static Logs& Get();

@@ -8,6 +8,7 @@
 #include "Networking/Command.h"
 #include "System/CommandHandler.h"
 
+int Player::playerCount = 0;
 int Player::escapeCount = 0;
 int Player::deadCount = 0;
 

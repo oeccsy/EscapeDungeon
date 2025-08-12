@@ -1,17 +1,16 @@
-#pragma once
+﻿#pragma once
 
 #include "Level/Level.h"
 
 class GameOverSystem
 {
 public:
-	GameOverSystem();
-	GameOverSystem(int playerCount);
+	GameOverSystem() = default;
 	~GameOverSystem() = default;
 
 	void CheckGameOver();
 	void GameOver();
 
-private:
-	int playerCount;
+public:
+	static bool isGameOver;
 };
