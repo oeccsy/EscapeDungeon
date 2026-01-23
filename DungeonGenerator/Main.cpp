@@ -29,13 +29,15 @@ int main()
 
 		PerlinNoise perlinNoise(settings);
 		perlinNoise.GeneratePerlinNoise();
-		perlinNoise.Print();
 	
 		exportSystem.GenerateDungeon(perlinNoise);
 		exportSystem.AddActors(10, 2);
-		exportSystem.Print();
 		exportSystem.Export();
 	}
+
+	std::cout << "던전 생성이 완료됐습니다. Enter를 누르면 종료합니다.";
+	std::cin.ignore(100, '\n');
+	std::cin.get();
 
 	return 0;
 }
