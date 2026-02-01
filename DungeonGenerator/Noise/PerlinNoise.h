@@ -5,7 +5,7 @@
 
 struct NoiseSettings
 {
-	Vector2 resolution = { 40, 40 };
+	Vector2 resolution = { 80, 40 };
 	Vector2 gridSize = { 4, 4 };
 	float seed = 0.0f;
 };

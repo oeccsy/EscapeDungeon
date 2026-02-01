@@ -26,7 +26,7 @@ void DungeonExportSystem::GenerateDungeon(PerlinNoise& perlinNoise)
 			dungeon[i][j].row = i;
 			dungeon[i][j].col = j;
 
-			if (perlinNoise.noise[i][j] > 0)
+			if (perlinNoise.noise[i][j] > 1)
 			{
 				dungeon[i][j].areaID = 0;
 				dungeon[i][j].value = '#';
