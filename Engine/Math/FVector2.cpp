@@ -49,3 +49,12 @@ float FVector2::Length()
 {
     return std::sqrt(x * x + y * y);
 }
+
+void FVector2::Normalize()
+{
+    float length = Length();
+    if (length <= 1e-6f) return;
+    
+    x /= length;
+    y /= length;
+}

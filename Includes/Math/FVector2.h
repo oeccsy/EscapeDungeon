@@ -20,6 +20,7 @@ public:
 
 	float Dot(const FVector2& other) const;
 	float Length();
+	void Normalize();
 
 public:
 	float x = 0.0f;
