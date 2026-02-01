@@ -64,7 +64,7 @@ namespace Utils
 		static std::random_device rd;
 		static std::mt19937 gen(rd());
 
-		for (int i = static_cast<int>(list.size()) - 1; i > 0; --i)
+		for (int i = list.size() - 1; i > 0; --i)
 		{
 			std::uniform_int_distribution<> dis(0, i);
 			int randomIndex = dis(gen);

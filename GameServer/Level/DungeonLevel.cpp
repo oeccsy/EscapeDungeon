@@ -21,8 +21,9 @@
 DungeonLevel::DungeonLevel() : commandHandler(*this)
 {
 	ReadDungeonFile("Map_1.txt");
+	RenderDungeon();
 	BindActorID();
-
+	
 	uiSystem.InitLogArea();
 	
 	Logs::Get().AddLog({ "==== 게임 시작 ====" });
@@ -34,8 +35,10 @@ DungeonLevel::DungeonLevel(int index) : commandHandler(*this)
 	sprintf_s(fileName, sizeof(fileName), "Map_%d.txt", index);
 	
 	ReadDungeonFile(fileName);
+	RenderDungeon();
 	BindActorID();
 
+	RenderDungeon();
 	uiSystem.InitLogArea();
 
 	Logs::Get().AddLog({ "==== 게임 시작 ====" });
@@ -139,7 +142,7 @@ void DungeonLevel::Tick(float deltaTime)
 
 		server.writeQueue.push(staminaCommand);
 	}
-
+	
 	while (!server.writeQueue.empty())
 	{
 		Command packet = server.writeQueue.front();
@@ -207,32 +210,38 @@ Actor* DungeonLevel::GetActorByID(int id)
 	}
 }
 
-void DungeonLevel::MoveUp(Actor* actor)
+void DungeonLevel::Move(Actor* actor, Vector2 dir)
 {
 	if (actor == nullptr) return;
-	if (actor->As<Player>()) actor->As<Player>()->Move({ 0, -1 });
-	if (actor->As<Monster>()) actor->As<Monster>()->Move({ 0, -1 });
+	
+	Vector2 prevPos = actor->GetPosition();
+	
+	if (actor->As<Player>()) actor->As<Player>()->Move(dir);
+	if (actor->As<Monster>()) actor->As<Monster>()->Move(dir);
+	
+	Vector2 afterPos = actor->GetPosition();
+	
+	if (prevPos != afterPos) RenderDungeon(prevPos.y, prevPos.x);
+}
+
+void DungeonLevel::MoveUp(Actor* actor)
+{
+	Move(actor, { 0, -1 });
 }
 
 void DungeonLevel::MoveDown(Actor* actor)
 {
-	if (actor == nullptr) return;
-	if (actor->As<Player>()) actor->As<Player>()->Move({ 0, 1 });
-	if (actor->As<Monster>()) actor->As<Monster>()->Move({ 0, 1 });
+	Move(actor, { 0, 1 });
 }
 
 void DungeonLevel::MoveLeft(Actor* actor)
 {
-	if (actor == nullptr) return;
-	if (actor->As<Player>()) actor->As<Player>()->Move({ -1, 0 });
-	if (actor->As<Monster>()) actor->As<Monster>()->Move({ -1, 0 });
+	Move(actor, { -1, 0});
 }
 
 void DungeonLevel::MoveRight(Actor* actor)
 {
-	if (actor == nullptr) return;
-	if (actor->As<Player>()) actor->As<Player>()->Move({ 1, 0 });
-	if (actor->As<Monster>()) actor->As<Monster>()->Move({ 1, 0 });
+	Move(actor, { 1, 0 });
 }
 
 void DungeonLevel::ReadDungeonFile(const char* fileName)
@@ -271,26 +280,19 @@ void DungeonLevel::ReadDungeonFile(const char* fileName)
 		{
 			switch (dungeon[i][j])
 			{
-			case '#':
-				AddActor(new Road({ j, i }));
-				break;
 			case 'P':
-				AddActor(new Road({ j, i }));
 				AddActor(new Player({ j, i }, this));
 				dungeon[i][j] = '#';
 				break;
 			case 'M':
-				AddActor(new Road({ j, i }));
 				AddActor(new Monster({ j, i }, this));
 				dungeon[i][j] = '#';
 				break;
 			case 'T':
-				AddActor(new Road({ j, i }));
 				AddActor(new Task({ j, i }));
 				dungeon[i][j] = '#';
 				break;
 			case 'E':
-				AddActor(new Road({ j, i }));
 				AddActor(new Exit({ j, i }));
 				dungeon[i][j] = '#';
 				break;
@@ -300,6 +302,28 @@ void DungeonLevel::ReadDungeonFile(const char* fileName)
 	}
 
 	fclose(file);
+}
+
+void DungeonLevel::RenderDungeon()
+{
+	for (int i = 0; i < 100; ++i)
+	{
+		for (int j = 0; j < 100; ++j)
+		{
+			if (dungeon[i][j] != '#') continue;
+			
+			Utils::SetConsoleTextColor(Color::White);
+			Utils::SetConsolePosition(Vector2(j, i));
+			std::cout << dungeon[i][j];
+		}
+	}
+}
+
+void DungeonLevel::RenderDungeon(int row, int col)
+{
+	Utils::SetConsoleTextColor(Color::White);
+	Utils::SetConsolePosition(Vector2(col, row));
+	std::cout << dungeon[row][col];
 }
 
 void DungeonLevel::BindActorID()

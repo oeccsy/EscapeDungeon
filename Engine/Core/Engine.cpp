@@ -69,6 +69,10 @@ void Engine::Run()
 			Tick(deltaTime);
 			Render();
 
+			char fpsText[50] = { };
+			sprintf_s(fpsText, 50, "FPS : %f", (1.0f / deltaTime));
+			SetConsoleTitleA(fpsText);
+
 			previousTime = currentTime;
 
 			input.SavePreviousKeyStates();

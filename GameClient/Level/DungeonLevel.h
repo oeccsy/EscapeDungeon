@@ -36,6 +36,8 @@ public:
 
 private:
 	void ReadDungeonFile(const char* fileName);
+	void RenderDungeon();
+	void RenderDungeon(int row, int col);
 	void BindActorID();
 
 private:

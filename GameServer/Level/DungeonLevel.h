@@ -33,6 +33,7 @@ public:
 	Actor* GetActorByClient(SOCKET socket);
 	Actor* GetActorByID(int id);
 
+	void Move(Actor* actor, Vector2 dir);
 	void MoveUp(Actor* actor);
 	void MoveDown(Actor* actor);
 	void MoveLeft(Actor* actor);
@@ -40,6 +41,8 @@ public:
 
 private:
 	void ReadDungeonFile(const char* fileName);
+	void RenderDungeon();
+	void RenderDungeon(int row, int col);
 	void BindActorID();
 
 private:
@@ -50,6 +53,7 @@ private:
 
 	InteractionSystem interactionSystem;
 	GameOverSystem gameOverSystem;
+	
 	UISystem uiSystem;
 	CommandHandler commandHandler;
 };

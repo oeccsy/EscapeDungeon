@@ -21,6 +21,7 @@
 DungeonLevel::DungeonLevel() : commandHandler(*this)
 {
 	ReadDungeonFile("Map_2.txt");
+	RenderDungeon();
 	BindActorID();
 	
 	uiSystem.InitLogArea();
@@ -34,6 +35,7 @@ DungeonLevel::DungeonLevel(int index) : commandHandler(*this)
 	sprintf_s(fileName, sizeof(fileName), "Map_%d.txt", index);
 
 	ReadDungeonFile(fileName);
+	RenderDungeon();
 	BindActorID();
 
 	uiSystem.InitLogArea();
@@ -177,26 +179,19 @@ void DungeonLevel::ReadDungeonFile(const char* fileName)
 		{
 			switch (dungeon[i][j])
 			{
-			case '#':
-				AddActor(new Road({ j, i }));
-				break;
 			case 'P':
-				AddActor(new Road({ j, i }));
 				AddActor(new Player({ j, i }, this));
 				dungeon[i][j] = '#';
 				break;
 			case 'M':
-				AddActor(new Road({ j, i }));
 				AddActor(new Monster({ j, i }, this));
 				dungeon[i][j] = '#';
 				break;
 			case 'T':
-				AddActor(new Road({ j, i }));
 				AddActor(new Task({ j, i }));
 				dungeon[i][j] = '#';
 				break;
 			case 'E':
-				AddActor(new Road({ j, i }));
 				AddActor(new Exit({ j, i }));
 				dungeon[i][j] = '#';
 				break;
@@ -206,6 +201,28 @@ void DungeonLevel::ReadDungeonFile(const char* fileName)
 	}
 
 	fclose(file);
+}
+
+void DungeonLevel::RenderDungeon()
+{
+	for (int i = 0; i < 100; ++i)
+	{
+		for (int j = 0; j < 100; ++j)
+		{
+			if (dungeon[i][j] != '#') continue;
+			
+			Utils::SetConsoleTextColor(Color::White);
+			Utils::SetConsolePosition(Vector2(j, i));
+			std::cout << dungeon[i][j];
+		}
+	}
+}
+
+void DungeonLevel::RenderDungeon(int row, int col)
+{
+	Utils::SetConsoleTextColor(Color::White);
+	Utils::SetConsolePosition(Vector2(col, row));
+	std::cout << dungeon[row][col];
 }
 
 void DungeonLevel::BindActorID()
@@ -255,7 +272,13 @@ void DungeonLevel::UpdateActorPositionByID(int id, const Vector2& pos)
 {
 	if (idToActor.find(id) == idToActor.end()) return;
 	
+	Vector2 prevPos = idToActor[id]->GetPosition();
+	
 	idToActor[id]->SetPosition(pos);
+	
+	Vector2 afterPos = idToActor[id]->GetPosition();
+	
+	if (prevPos != afterPos) RenderDungeon(prevPos.y, prevPos.x);
 }
 
 void DungeonLevel::UpdateActorStaminaByID(int id, int stamina)
